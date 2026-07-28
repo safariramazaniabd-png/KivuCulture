@@ -3515,6 +3515,22 @@ if (authClient) {
   });
 }
 
+// Handle Stripe checkout return
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const checkout = params.get('checkout');
+  if (checkout === 'success' || checkout === 'cancel') {
+    const url = new URL(window.location);
+    url.searchParams.delete('checkout');
+    window.history.replaceState({}, '', url);
+    if (checkout === 'success') {
+      setTimeout(() => alert('Paiement réussi ! Votre commande est confirmée.'), 500);
+    } else {
+      setTimeout(() => alert('Paiement annulé. Vous pouvez réessayer.'), 500);
+    }
+  }
+})();
+
 async function signInWithGoogle() {
   if (!authClient) {
     setAuthFeedback(authFeedback, 'Configurez Supabase avant de continuer.', 'error');
@@ -3884,8 +3900,8 @@ function buyArtwork(artworkId) {
         <div class="purchase-preview-price">${price} ${sym}</div>
       </div>
     </div>
-    <p style="font-size:0.85rem;color:var(--gris-text);margin-bottom:16px;">En cliquant sur Confirmer, une commande sera créée. Le paiement sera traité ultérieurement.</p>
-    <button class="btn btn-lave" id="confirm-purchase-btn" style="width:100%;justify-content:center;">Confirmer l'achat</button>
+    <p style="font-size:0.85rem;color:var(--gris-text);margin-bottom:16px;">Vous serez redirigé vers Stripe pour le paiement sécurisé par carte.</p>
+    <button class="btn btn-lave" id="confirm-purchase-btn" style="width:100%;justify-content:center;">Confirmer et payer</button>
     <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:8px;" onclick="closeModal()">Annuler</button>
   `;
   document.getElementById('purchase-title').textContent = 'Confirmer l\'achat';
@@ -3899,27 +3915,25 @@ function buyArtwork(artworkId) {
   document.getElementById('confirm-purchase-btn').onclick = () => createOrder(artwork);
 }
 
+const EDGE_FUNCTION_URL = authConfig.url + '/functions/v1';
+
 async function createOrder(artwork) {
   const btn = document.getElementById('confirm-purchase-btn');
   btn.disabled = true;
-  btn.textContent = 'Création de la commande…';
+  btn.textContent = 'Redirection vers Stripe…';
   try {
-    const { data, error } = await authClient.from('orders').insert({
-      buyer_id: currentUser.id,
-      artwork_id: artwork.id,
-      amount_cents: artwork.price_cents,
-      currency: artwork.currency || 'USD',
-      status: 'pending'
-    }).select().single();
-    if (error) throw error;
-    btn.textContent = 'Commande créée !';
-    btn.style.background = 'var(--foret-light)';
-    setTimeout(() => { closeModal(); btn.disabled = false; btn.textContent = 'Confirmer l\'achat'; btn.style.background = ''; }, 2000);
+    const session = await authClient.functions.invoke('create-checkout-session', {
+      body: { artwork_id: artwork.id }
+    });
+    if (session.error) throw session.error;
+    const { url, error } = session.data;
+    if (error) throw new Error(error);
+    window.location.href = url;
   } catch (err) {
-    console.error('Order creation error:', err);
+    console.error('Stripe session error:', err);
     btn.textContent = 'Erreur — ' + (err.message || 'réessayez');
     btn.style.background = '#FCE4EC';
-    setTimeout(() => { btn.disabled = false; btn.textContent = 'Confirmer l\'achat'; btn.style.background = ''; }, 3000);
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Confirmer et payer'; btn.style.background = ''; }, 3000);
   }
 }
 

@@ -52,3 +52,24 @@
 - `_redirects` is also provided for redundancy.
 - `serve.sh` detects IPv6 support and falls back to IPv4 (`0.0.0.0`) if unavailable.
 - Favicon is an inline SVG data URI in the HTML head.
+
+## Phase 4 — Stripe Payments (Edge Functions)
+
+Two Supabase Edge Functions handle payments:
+
+### `create-checkout-session`
+- Called from frontend when user clicks "Confirmer et payer"
+- Creates a Stripe Checkout Session and inserts a pending order
+- Requires env vars: `STRIPE_SECRET_KEY`
+- Deploy: `supabase/functions/create-checkout-session/index.ts`
+
+### `stripe-webhook`
+- Listens for Stripe `checkout.session.completed` events
+- Updates order status from `pending` → `paid`
+- Requires env vars: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`
+- Deploy: `supabase/functions/stripe-webhook/index.ts`
+- Register the webhook URL in Stripe Dashboard at `https://uvgyjhgdcczjfijsbpgq.supabase.co/functions/v1/stripe-webhook`
+
+### Frontend
+- `createOrder()` calls `authClient.functions.invoke('create-checkout-session')` instead of direct DB insert
+- On return from Stripe, `?checkout=success` or `?checkout=cancel` is handled with alerts
