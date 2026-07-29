@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KIVU — Culture & Productions Matérielles du Congo Oriental</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23141008'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23B8924A'/%3E%3C/svg%3E">
 <script src="supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -39,6 +39,18 @@
   /* Surfaces */
   --card-bg:     #FFFFFF;
   --section-alt: #F0E5CC;   /* crème chaude section alternée */
+
+  /* Typographie — système premium type X.com */
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fw-heading: 700;
+  --fw-subheading: 600;
+  --fw-body: 400;
+  --fw-label: 500;
+  --fw-button: 600;
+  --ls-heading: -0.01em;
+  --ls-body: 0;
+  --lh-heading: 1.15;
+  --lh-body: 1.65;
 }
 
 html { scroll-behavior: smooth; }
@@ -46,7 +58,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--blanc);
   color: var(--noir);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.65;
   overflow-x: hidden;
@@ -56,10 +68,10 @@ body {
    TYPOGRAPHIE
 ────────────────────────────────────────── */
 h1, h2, h3, h4, h5 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-heading);
   line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 
 /* ──────────────────────────────────────────
@@ -110,10 +122,10 @@ nav.up {
   padding: 12px 48px;
 }
 .nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-heading);
   font-size: 1.3rem;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--ls-heading);
   color: var(--noir);
   text-decoration: none;
   display: flex;
@@ -311,8 +323,8 @@ nav.up {
   font-size: 0.75rem;
   font-weight: 600;
   color: rgba(255,255,255,0.7);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   margin-bottom: 32px;
   width: fit-content;
   opacity: 0;
@@ -326,11 +338,11 @@ nav.up {
 }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
 .hero-h1 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-heading);
   font-size: clamp(3rem, 6vw, 5.5rem);
   color: var(--blanc);
-  letter-spacing: -0.04em;
+  letter-spacing: var(--ls-heading);
   line-height: 1.0;
   margin-bottom: 24px;
   opacity: 0;
@@ -369,11 +381,11 @@ nav.up {
 }
 .hero-pillar + .hero-pillar { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; }
 .pillar-letter {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-weight: var(--fw-heading);
+  letter-spacing: 0;
+  text-transform: none;
   padding: 3px 7px;
   border-radius: 4px;
   margin-bottom: 6px;
@@ -424,10 +436,10 @@ nav.up {
   border-radius: 6px;
   padding: 5px 10px;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--blanc);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .mosaic-cell:nth-child(1) .mosaic-label { background: rgba(184,146,74,0.92); color: var(--noir); }
 .mosaic-cell:nth-child(2) .mosaic-label { background: rgba(232,204,138,0.92); color: var(--noir); }
@@ -448,11 +460,11 @@ nav.up {
   display: inline-flex;
   align-items: center;
   gap: 18px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--blanc);
   padding: 0 28px;
 }
@@ -471,11 +483,11 @@ nav.up {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   padding: 5px 12px;
   border-radius: 100px;
   margin-bottom: 20px;
@@ -488,10 +500,10 @@ nav.up {
 .chip-noir   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.12); }
 
 .section-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 4vw, 3.4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-weight: var(--fw-heading);
+  letter-spacing: var(--ls-heading);
   line-height: 1.05;
   margin-bottom: 16px;
 }
@@ -516,10 +528,10 @@ nav.up {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
   padding: 12px 24px;
   border-radius: 8px;
   border: none;
@@ -586,20 +598,20 @@ nav.up {
   justify-content: flex-end;
 }
 .music-main-tag {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--lave-light);
   margin-bottom: 10px;
 }
 .music-main-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
-  letter-spacing: -0.03em;
+  letter-spacing: var(--ls-heading);
   margin-bottom: 8px;
 }
 .music-main-desc { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.65; }
@@ -628,19 +640,19 @@ nav.up {
 .music-card:nth-child(3) .music-card-line { background: var(--ambre); }
 .music-card-genre {
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: rgba(255,255,255,0.45);
   margin-bottom: 6px;
 }
 .music-card-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .music-card-desc { font-size: 0.84rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
 
@@ -663,9 +675,9 @@ nav.up {
 .instrument-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); transform: translateY(-3px); }
 .instrument-icon { font-size: 1.8rem; margin-bottom: 8px; }
 .instrument-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--blanc);
   margin-bottom: 4px;
 }
@@ -698,18 +710,18 @@ nav.up {
 .lit-card-body { padding: 22px 24px 26px; }
 .lit-card-type {
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   margin-bottom: 8px;
 }
 .lit-card-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 8px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .lit-card-desc { font-size: 0.85rem; color: var(--gris-text); line-height: 1.7; margin-bottom: 16px; }
 .lit-quote {
@@ -783,16 +795,16 @@ nav.up {
 .cinema-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .cinema-item-type {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--lac);
   margin-bottom: 4px;
 }
 .cinema-item-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.88rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--noir);
   margin-bottom: 3px;
 }
@@ -852,19 +864,19 @@ nav.up {
 .archi-type-body { padding: 18px 20px 20px; }
 .archi-type-label {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--terre);
   margin-bottom: 6px;
 }
 .archi-type-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .archi-type-desc { font-size: 0.82rem; color: var(--gris-text); line-height: 1.65; }
 .archi-spaces {
@@ -888,12 +900,12 @@ nav.up {
   flex-shrink: 0;
 }
 .space-card-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .space-card-desc { font-size: 0.84rem; color: rgba(255,255,255,0.5); line-height: 1.65; }
 
@@ -932,18 +944,18 @@ nav.up {
 }
 .textile-community {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--foret-light);
   margin-bottom: 4px;
 }
 .textile-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
   margin-bottom: 4px;
 }
 .textile-detail { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
@@ -997,19 +1009,19 @@ nav.up {
 .plat-card-body { padding: 16px 18px 18px; }
 .plat-region {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--lave);
   margin-bottom: 4px;
 }
 .plat-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 5px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .plat-desc { font-size: 0.8rem; color: var(--gris-text); line-height: 1.6; }
 .plat-origin {
@@ -1048,11 +1060,11 @@ nav.up {
 .tech-panel-content { position: relative; z-index: 1; }
 .tech-panel-icon { font-size: 2.5rem; margin-bottom: 20px; }
 .tech-panel-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
-  letter-spacing: -0.03em;
+  letter-spacing: var(--ls-heading);
   margin-bottom: 12px;
 }
 .tech-panel-desc { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.75; margin-bottom: 28px; }
@@ -1068,7 +1080,7 @@ nav.up {
 .tech-items li::before {
   content: '→';
   color: var(--lave-light);
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   flex-shrink: 0;
   margin-top: 1px;
 }
@@ -1084,9 +1096,9 @@ nav.up {
   position: absolute;
   right: -20px;
   bottom: -30px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 9rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: rgba(255,255,255,0.08);
   line-height: 1;
   pointer-events: none;
@@ -1105,9 +1117,9 @@ nav.up {
 }
 .innovation-item:hover { background: rgba(255,255,255,0.18); }
 .inno-num {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: rgba(255,255,255,0.9);
   line-height: 1;
   margin-bottom: 6px;
@@ -1144,11 +1156,11 @@ nav.up {
 .market-badge {
   position: absolute;
   top: 10px; left: 10px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   padding: 4px 9px;
   border-radius: 5px;
 }
@@ -1158,33 +1170,33 @@ nav.up {
 .market-body { padding: 16px 18px 20px; }
 .market-cat {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--lave);
   margin-bottom: 4px;
 }
 .market-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 5px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .market-artist { font-size: 0.78rem; color: var(--gris-text); margin-bottom: 14px; }
 .market-footer { display: flex; align-items: center; justify-content: space-between; }
 .market-price {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
 }
 .market-price span {
   font-size: 0.7rem;
   font-weight: 400;
   color: var(--gris-mid);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   display: block;
 }
 
@@ -1203,16 +1215,16 @@ nav.up {
 }
 .filter-group label {
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--gris-text);
 }
 .filter-group select {
   padding: 8px 14px;
   border: 1px solid #E8E3DC;
   border-radius: 8px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   color: var(--noir);
   background: var(--blanc);
@@ -1268,9 +1280,9 @@ nav.up {
   margin-bottom: 14px;
 }
 .agenda-day {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   line-height: 1;
 }
@@ -1278,23 +1290,23 @@ nav.up {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--gris-text);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .agenda-cat {
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   margin-bottom: 6px;
 }
 .agenda-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .agenda-loc { font-size: 0.8rem; color: var(--gris-text); }
 
@@ -1327,19 +1339,19 @@ nav.up {
 .artisan-info { padding: 14px 4px 0; }
 .artisan-domain {
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--foret);
   margin-bottom: 4px;
 }
 .artisan-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   margin-bottom: 2px;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--ls-heading);
 }
 .artisan-loc { font-size: 0.78rem; color: var(--gris-text); }
 
@@ -1371,20 +1383,20 @@ nav.up {
   background: linear-gradient(90deg, var(--terre), var(--lave), var(--lave-light), var(--ambre));
 }
 .cert-card-id {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
   color: rgba(255,255,255,0.35);
-  text-transform: uppercase;
+  text-transform: none;
   margin-bottom: 6px;
 }
 .cert-card-num {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
   margin-bottom: 24px;
 }
 .cert-card-img {
@@ -1401,7 +1413,7 @@ nav.up {
   padding-top: 16px;
 }
 .cert-card-artist { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
-.cert-card-artist strong { display: block; font-family: 'Syne', sans-serif; font-weight: 800; color: var(--blanc); font-size: 0.95rem; }
+.cert-card-artist strong { display: block; font-family: var(--font-sans); font-weight: var(--fw-heading); color: var(--blanc); font-size: 0.95rem; }
 .cert-qr {
   width: 56px; height: 56px;
   background: var(--blanc);
@@ -1446,11 +1458,11 @@ nav.up {
   align-items: center;
 }
 .nl-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
-  letter-spacing: -0.04em;
+  letter-spacing: var(--ls-heading);
   line-height: 1.1;
   margin-bottom: 14px;
 }
@@ -1463,7 +1475,7 @@ nav.up {
   border-right: none;
   padding: 14px 20px;
   color: var(--blanc);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   outline: none;
   border-radius: 8px 0 0 8px;
@@ -1476,9 +1488,9 @@ nav.up {
   color: var(--noir);
   border: none;
   padding: 14px 24px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   cursor: pointer;
   border-radius: 0 8px 8px 0;
   transition: background .2s;
@@ -1488,9 +1500,9 @@ nav.up {
 .nl-note { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 12px; }
 .nl-stats { display: flex; gap: 36px; margin-top: 32px; }
 .nl-stat-num {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--blanc);
   display: block;
   line-height: 1;
@@ -1541,11 +1553,11 @@ nav.up {
 }
 .modal-close:hover { background: #E0DAD3; }
 .modal-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
-  letter-spacing: -0.03em;
+  letter-spacing: var(--ls-heading);
   margin-bottom: 6px;
 }
 .modal-sub { font-size: 0.88rem; color: var(--gris-text); margin-bottom: 28px; }
@@ -1553,10 +1565,10 @@ nav.up {
 .fg label {
   display: block;
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--noir);
   margin-bottom: 6px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 .fg input, .fg select {
   width: 100%;
@@ -1564,7 +1576,7 @@ nav.up {
   border: 1.5px solid #E5E0D8;
   border-radius: 8px;
   padding: 11px 15px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   color: var(--noir);
   outline: none;
@@ -1589,9 +1601,9 @@ nav.up {
   background: transparent;
   color: var(--gris-text);
   cursor: pointer;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.76rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   padding: 10px 8px;
   transition: background .2s, color .2s;
 }
@@ -1616,17 +1628,17 @@ nav.up {
   color: var(--gris-text);
   display: block;
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
   margin-bottom: 5px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .auth-account-email {
   color: var(--noir);
   display: block;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   overflow-wrap: anywhere;
 }
 .auth-account-role { color: var(--gris-text); display: block; font-size: 0.8rem; margin-top: 5px; }
@@ -1648,9 +1660,9 @@ nav.up {
   background: transparent;
   color: var(--gris-text);
   cursor: pointer;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.76rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   padding: 10px 8px;
   transition: background .2s, color .2s;
 }
@@ -1676,8 +1688,8 @@ nav.up {
 }
 .artwork-item-info { flex: 1; min-width: 0; }
 .artwork-item-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-subheading);
   font-size: 0.85rem;
   color: var(--noir);
 }
@@ -1687,9 +1699,9 @@ nav.up {
 }
 .artwork-item-status {
   font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-weight: var(--fw-subheading);
+  text-transform: none;
+  letter-spacing: 0;
   padding: 3px 8px;
   border-radius: 4px;
 }
@@ -1703,12 +1715,12 @@ nav.up {
   border: 0;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: var(--fw-subheading);
+  letter-spacing: 0;
   padding: 5px 9px;
-  text-transform: uppercase;
+  text-transform: none;
   transition: opacity .2s;
 }
 .art-action:hover { opacity: 0.75; }
@@ -1767,17 +1779,17 @@ nav.up {
   background: var(--gris-light);
 }
 .artisan-profile-name {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
 }
 .artisan-profile-role {
   font-size: 0.78rem;
   color: var(--lave);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .artisan-profile-loc {
   font-size: 0.85rem;
@@ -1807,8 +1819,8 @@ nav.up {
   padding: 10px 12px 14px;
 }
 .artisan-profile-card-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-subheading);
   font-size: 0.82rem;
   color: var(--noir);
 }
@@ -1834,8 +1846,8 @@ nav.up {
 }
 .purchase-preview-info { flex: 1; }
 .purchase-preview-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-subheading);
   font-size: 1rem;
   color: var(--noir);
 }
@@ -1845,9 +1857,9 @@ nav.up {
   margin-bottom: 6px;
 }
 .purchase-preview-price {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--lave);
 }
 
@@ -1867,18 +1879,18 @@ nav.up {
   margin-bottom: 6px;
 }
 .order-item-id {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--gris-text);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .order-item-status {
   font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-weight: var(--fw-subheading);
+  text-transform: none;
+  letter-spacing: 0;
   padding: 3px 8px;
   border-radius: 4px;
 }
@@ -1920,9 +1932,9 @@ nav.up {
 }
 .cert-info { flex: 1; }
 .cert-number {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--noir);
 }
 .cert-artwork {
@@ -1944,17 +1956,17 @@ nav.up {
   text-align: center;
 }
 .admin-stat-num {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: var(--fw-heading);
   color: var(--noir);
   line-height: 1.2;
 }
 .admin-stat-label {
   font-size: 0.7rem;
   color: var(--gris-text);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  text-transform: none;
+  letter-spacing: 0;
   font-weight: 600;
 }
 .admin-table-wrap {
@@ -1969,11 +1981,11 @@ nav.up {
 .admin-table th {
   text-align: left;
   padding: 8px 10px;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-subheading);
   font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--gris-text);
   border-bottom: 2px solid var(--gris-light);
 }
@@ -1995,9 +2007,9 @@ nav.up {
   background: var(--gris-light);
   color: var(--gris-text);
   cursor: pointer;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   padding: 7px 14px;
   transition: background .2s, color .2s;
 }
@@ -2020,7 +2032,7 @@ nav.up {
   cursor: pointer;
   transition: background .2s, border-color .2s;
   margin-top: 16px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-sans);
 }
 .btn-google:hover { background: #F8F9FA; border-color: #C4C7CC; }
 .btn-google:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -2057,10 +2069,10 @@ footer {
   margin-bottom: 28px;
 }
 .footer-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-heading);
   font-size: 1.4rem;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--ls-heading);
   color: var(--blanc);
   display: flex;
   align-items: center;
@@ -2077,17 +2089,17 @@ footer {
   display: flex; align-items: center; justify-content: center;
   color: rgba(255,255,255,0.5);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   text-decoration: none;
   transition: background .2s, color .2s;
 }
 .soc:hover { background: var(--lave); color: var(--noir); }
 .footer-col-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: var(--fw-heading);
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--lave-light);
   margin-bottom: 18px;
 }
@@ -2130,9 +2142,9 @@ footer {
   align-items: center;
   gap: 10px;
   padding: 18px 24px;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-subheading);
   color: var(--gris-text);
   text-decoration: none;
   border-bottom: 2.5px solid transparent;
@@ -2333,7 +2345,7 @@ footer {
 <!-- A1 — Musique & Danse -->
 <div style="padding: 0 64px 96px;">
   <div class="rv" style="margin-bottom: 24px;">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;color:var(--noir);">A.1 — Musique & Danse</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);">A.1 — Musique & Danse</h3>
     <p style="font-size:0.9rem;color:var(--gris-text);margin-top:6px;">Elles rythment la vie sociale : rythmes ancestraux, instruments traditionnels, genres modernes — l'énergie et les sentiments d'un peuple.</p>
   </div>
   <div class="music-layout rv">
@@ -2369,7 +2381,7 @@ footer {
 
   <!-- Instruments -->
   <div class="section-dark rv" style="border-radius:16px; margin-top:20px; padding:40px 48px;">
-    <h4 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-0.01em;color:rgba(255,255,255,0.5);margin-bottom:24px;text-transform:uppercase;font-size:0.75rem;letter-spacing:0.12em;">Instruments Traditionnels du Kivu</h4>
+    <h4 style="font-family:var(--font-sans);font-weight:var(--fw-heading);color:rgba(255,255,255,0.5);margin-bottom:24px;text-transform:none;font-size:0.75rem;">Instruments Traditionnels du Kivu</h4>
     <div class="instruments-grid">
       <div class="instrument-card">
         <div class="instrument-icon">🪘</div>
@@ -2403,7 +2415,7 @@ footer {
 <!-- A2 — Littérature & Oralité -->
 <div class="section-alt" style="padding: 72px 64px;">
   <div class="rv" style="margin-bottom:40px;">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;color:var(--noir);">A.2 — Littérature & Oralité</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);">A.2 — Littérature & Oralité</h3>
     <p style="font-size:0.9rem;color:var(--gris-text);margin-top:6px;max-width:540px;">Livres, contes, proverbes et mythes : la sagesse populaire et les leçons morales transmises de manière imagée depuis des siècles.</p>
   </div>
   <div class="lit-grid rv">
@@ -2440,7 +2452,7 @@ footer {
 <!-- A3 — Cinéma & Théâtre -->
 <div style="padding: 72px 64px 96px;">
   <div class="rv" style="margin-bottom:40px;">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;color:var(--noir);">A.3 — Cinéma & Théâtre</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);">A.3 — Cinéma & Théâtre</h3>
     <p style="font-size:0.9rem;color:var(--gris-text);margin-top:6px;max-width:540px;">Miroirs de la société : critiquant ses travers ou célébrant ses succès. Le Kivu développe une scène cinématographique indépendante de plus en plus visible.</p>
   </div>
   <div class="cinema-layout rv">
@@ -2451,7 +2463,7 @@ footer {
       </div>
       <div style="margin-top:16px;">
         <span class="chip chip-lac">Documentaire</span>
-        <h4 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">Goma — La Ville qui Résiste</h4>
+        <h4 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);margin-bottom:8px;">Goma — La Ville qui Résiste</h4>
         <p style="font-size:0.88rem;color:var(--gris-text);line-height:1.7;">Portrait d'une ville qui se reconstruit : cinéastes locaux documentent la résilience, l'humour et la créativité quotidienne de Goma entre lac et volcan.</p>
       </div>
     </div>
@@ -2509,14 +2521,14 @@ footer {
     <img src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=1200&q=80" alt="Architecture Kivu" loading="lazy">
     <div class="archi-hero-overlay">
       <span class="chip chip-ambre" style="margin-bottom:14px;">Paysage Urbain</span>
-      <h3 style="font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--blanc);letter-spacing:-0.04em;margin-bottom:8px;">Goma — La Ville sur la Lave</h3>
+      <h3 style="font-family:var(--font-sans);font-size:2.2rem;font-weight:var(--fw-heading);color:var(--blanc);letter-spacing:var(--ls-heading);margin-bottom:8px;">Goma — La Ville sur la Lave</h3>
       <p style="font-size:0.95rem;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.7;">Construite sur des coulées de lave volcanique du Nyiragongo, Goma développe une architecture adaptée unique au monde : fondations sur pierre poreuse noire, matériaux hybrides locaux et imported.</p>
     </div>
   </div>
 
   <!-- Types Architecturaux -->
   <div class="rv">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:-0.01em;color:var(--noir);margin-bottom:24px;">B.1 — Formes Architecturales du Kivu</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:24px;">B.1 — Formes Architecturales du Kivu</h3>
     <div class="archi-types">
       <div class="archi-type">
         <div class="archi-type-img-wrap">
@@ -2563,7 +2575,7 @@ footer {
 
   <!-- Espaces Publics -->
   <div style="margin-top:48px;" class="rv">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:-0.01em;color:var(--noir);margin-bottom:20px;">B.2 — L'Espace Public : la Vie Communautaire</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:20px;">B.2 — L'Espace Public : la Vie Communautaire</h3>
     <div class="archi-spaces">
       <div class="space-card">
         <div class="space-icon">🏛</div>
@@ -2613,7 +2625,7 @@ footer {
 <!-- C1 — Textiles -->
 <div style="padding: 0 0 96px;">
   <div style="padding: 0 64px;" class="rv">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;color:var(--noir);margin-bottom:6px;">C.1 — Textiles & Vêtements</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:6px;">C.1 — Textiles & Vêtements</h3>
     <p style="font-size:0.9rem;color:var(--gris-text);margin-bottom:28px;max-width:540px;">Motifs de tissage, teintures naturelles, manières de porter le vêtement : des marqueurs sociaux et identitaires forts au Kivu.</p>
   </div>
   <div class="textiles-grid rv">
@@ -2655,7 +2667,7 @@ footer {
 <!-- C2 — Gastronomie -->
 <div class="section-alt" style="padding: 72px 64px 96px;">
   <div class="rv" style="margin-bottom:40px;">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;color:var(--noir);margin-bottom:6px;">C.2 — Gastronomie Kivutienne</h3>
+    <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:6px;">C.2 — Gastronomie Kivutienne</h3>
     <p style="font-size:0.9rem;color:var(--gris-text);max-width:560px;">La gastronomie est plus que de la nourriture : c'est un art complexe. Le choix des ingrédients, les méthodes de cuisson et les rituels de table sont des piliers culturels du Kivu.</p>
   </div>
   <div class="gastro-header rv">
@@ -2663,7 +2675,7 @@ footer {
       <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=700&q=80" alt="Gastronomie Kivu" loading="lazy">
     </div>
     <div>
-      <h4 style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-0.03em;color:var(--noir);margin-bottom:14px;">Une cuisine de montagne,<br>de lac et de forêt</h4>
+      <h4 style="font-family:var(--font-sans);font-size:1.5rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:14px;">Une cuisine de montagne,<br>de lac et de forêt</h4>
       <p style="font-size:0.92rem;color:var(--gris-text);line-height:1.78;margin-bottom:18px;">Le Kivu bénéficie d'une biodiversité exceptionnelle. Ses cuisines conjuguent les ressources des lacs, des hauts plateaux agricoles et des forêts denses. On mange ensemble, on partage, on remercie.</p>
       <p style="font-size:0.92rem;color:var(--gris-text);line-height:1.78;margin-bottom:24px;">Le repas kivutien est un acte communautaire. La marmite partagée au centre, les mains qui se servent, les générations qui mangent ensemble : chaque repas est un rituel social.</p>
       <a href="#artisanat" class="btn btn-foret">Explorer les recettes</a>
@@ -2772,7 +2784,7 @@ footer {
   <!-- Innovation chiffres -->
   <div class="tech-innovation rv" style="margin-top:3px; border-radius:0; background: var(--lave);">
     <div style="position:relative;z-index:1;">
-      <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--noir);letter-spacing:-0.02em;margin-bottom:6px;">Le Kivu en chiffres de développement</h3>
+      <h3 style="font-family:var(--font-sans);font-size:1.3rem;font-weight:var(--fw-heading);color:var(--noir);letter-spacing:var(--ls-heading);margin-bottom:6px;">Le Kivu en chiffres de développement</h3>
       <p style="font-size:0.88rem;color:rgba(20,16,8,0.65);margin-bottom:0;">Le potentiel d'un territoire en mouvement malgré tout.</p>
       <div class="innovation-items">
         <div class="innovation-item" style="background:rgba(20,16,8,0.12);">
@@ -2969,7 +2981,7 @@ footer {
     </div>
     <p class="nl-note">Désabonnement en un clic. Aucune donnée revendue.</p>
     <div style="margin-top:32px;">
-      <p style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;font-family:'Syne',sans-serif;">Paiement sécurisé</p>
+      <p style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:12px;text-transform:none;letter-spacing:0;font-family:var(--font-sans);">Paiement sécurisé</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">M-PESA</span>
         <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">VISA</span>
@@ -3142,7 +3154,7 @@ footer {
             <p style="font-size:0.85rem;color:var(--gris-text);margin-bottom:16px;" id="artwork-list-status">Chargement de vos œuvres…</p>
           </div>
           <details id="artwork-add-details" style="margin-top:16px;">
-            <summary style="cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--lave);">+ Ajouter une œuvre</summary>
+            <summary style="cursor:pointer;font-family:var(--font-sans);font-weight:var(--fw-subheading);font-size:0.82rem;color:var(--lave);">+ Ajouter une œuvre</summary>
             <form id="artwork-form" style="margin-top:14px;">
               <div class="fg"><label for="art-title">Titre de l'œuvre</label><input id="art-title" name="title" type="text" placeholder="Nom de l'œuvre" required></div>
               <div class="fg"><label for="art-category">Catégorie</label>
@@ -3159,7 +3171,7 @@ footer {
                   <option value="Littérature">Littérature</option>
                 </select>
               </div>
-              <div class="fg"><label for="art-description">Description</label><textarea id="art-description" name="description" rows="3" placeholder="Matériaux, dimensions, histoire de l'œuvre…" style="width:100%;background:var(--off-white);border:1.5px solid #E5E0D8;border-radius:8px;padding:11px 15px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:var(--noir);outline:none;resize:vertical;"></textarea></div>
+              <div class="fg"><label for="art-description">Description</label><textarea id="art-description" name="description" rows="3" placeholder="Matériaux, dimensions, histoire de l'œuvre…" style="width:100%;background:var(--off-white);border:1.5px solid #E5E0D8;border-radius:8px;padding:11px 15px;font-family:var(--font-sans);font-size:0.9rem;color:var(--noir);outline:none;resize:vertical;"></textarea></div>
               <div class="fg-row">
                 <div class="fg"><label for="art-price">Prix ($)</label><input id="art-price" name="price" type="number" min="1" step="0.01" placeholder="0.00" required></div>
                 <div class="fg"><label for="art-image">Image URL</label><input id="art-image" name="image_path" type="url" placeholder="https://images.unsplash.com/…"></div>
@@ -4387,10 +4399,10 @@ async function loadArtisanProfile(profileId) {
       <div class="artisan-profile-header">
         <img class="artisan-profile-avatar" src="${avatar}" alt="" loading="lazy">
         <div class="artisan-profile-name">${escapeHtml(fullName)}</div>
-        <div class="artisan-profile-role">${escapeHtml(roleLabel)} ${profile.verification_status === 'verified' ? '<span style="display:inline-block;background:#E8F5E9;color:#28613A;font-size:0.6rem;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:700;">Vérifié</span>' : ''}</div>
+        <div class="artisan-profile-role">${escapeHtml(roleLabel)} ${profile.verification_status === 'verified' ? '<span style="display:inline-block;background:#E8F5E9;color:#28613A;font-size:0.6rem;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:var(--fw-subheading);">Vérifié</span>' : ''}</div>
         ${profile.city ? '<div class="artisan-profile-loc">' + escapeHtml(profile.city) + '</div>' : ''}
       </div>
-      <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:14px;">Œuvres publiées (${artworks.length})</h3>
+      <h3 style="font-family:var(--font-sans);font-size:1rem;font-weight:var(--fw-subheading);margin-bottom:14px;">Œuvres publiées (${artworks.length})</h3>
       <div class="artisan-profile-grid">${artworksHtml}</div>
     `;
   } catch (err) {
