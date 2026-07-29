@@ -147,8 +147,8 @@ nav.up {
 }
 .nav-menu a {
   font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--gris-text);
+  font-weight: var(--fw-subheading);
+  color: var(--noir);
   text-decoration: none;
   padding: 7px 14px;
   border-radius: 100px;
@@ -286,6 +286,25 @@ nav.up {
 }
 .body-scroll-lock { overflow: hidden; }
 
+/* ── Skip link ── */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 16px;
+  z-index: 10001;
+  background: var(--noir);
+  color: var(--blanc);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: var(--fw-subheading);
+  text-decoration: none;
+  transition: top .25s ease;
+}
+.skip-link:focus { top: 16px; }
+.visually-hidden { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+
 /* ──────────────────────────────────────────
    HERO
 ────────────────────────────────────────── */
@@ -403,6 +422,7 @@ nav.up {
   line-height: 1.3;
 }
 @keyframes slideIn { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
 .hero-right {
   position: relative;
@@ -554,6 +574,25 @@ nav.up {
 .btn-outline-w { background: transparent; color: var(--blanc); border: 1.5px solid rgba(255,255,255,0.25); }
 .btn-outline-w:hover { border-color: rgba(255,255,255,0.7); }
 .btn-sm { padding: 8px 16px; font-size: 0.76rem; }
+.btn-noir { background: var(--noir); color: var(--blanc); }
+.btn-noir:hover { background: var(--navy); transform: translateY(-2px); }
+
+/* ── Focus visible global ── */
+:focus-visible {
+  outline: 2.5px solid var(--lave);
+  outline-offset: 2px;
+}
+button:focus-visible:not(:active),
+a:focus-visible:not(:active),
+select:focus-visible:not(:active),
+input:focus-visible:not(:active),
+textarea:focus-visible:not(:active),
+[tabindex]:focus-visible:not(:active) {
+  outline: 2.5px solid var(--lave);
+  outline-offset: 2px;
+}
+.nav-toggle:focus-visible { outline-color: var(--lave); }
+.modal-close:focus-visible { outline-color: var(--noir); }
 
 /* ──────────────────────────────────────────
    REVEAL ANIMATION
@@ -1195,7 +1234,7 @@ nav.up {
 .market-price span {
   font-size: 0.7rem;
   font-weight: 400;
-  color: var(--gris-mid);
+  color: var(--gris-text);
   font-family: var(--font-sans);
   display: block;
 }
@@ -1497,7 +1536,7 @@ nav.up {
   white-space: nowrap;
 }
 .nl-btn:hover { background: var(--lave-light); }
-.nl-note { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 12px; }
+.nl-note { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 12px; }
 .nl-stats { display: flex; gap: 36px; margin-top: 32px; }
 .nl-stat-num {
   font-family: var(--font-sans);
@@ -2080,14 +2119,14 @@ footer {
   margin-bottom: 14px;
 }
 .footer-logo .dot-r { width: 8px; height: 8px; background: var(--lave); border-radius: 50%; }
-.footer-desc { font-size: 0.88rem; color: rgba(255,255,255,0.4); line-height: 1.75; margin-bottom: 24px; }
+.footer-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.75; margin-bottom: 24px; }
 .footer-socials { display: flex; gap: 10px; }
 .soc {
   width: 36px; height: 36px;
   background: rgba(255,255,255,0.07);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.55);
   font-size: 0.85rem;
   font-weight: var(--fw-subheading);
   text-decoration: none;
@@ -2104,7 +2143,7 @@ footer {
   margin-bottom: 18px;
 }
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { font-size: 0.85rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color .2s; }
+.footer-links a { font-size: 0.85rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: rgba(255,255,255,0.85); }
 .footer-bottom {
   display: flex;
@@ -2113,10 +2152,10 @@ footer {
   flex-wrap: wrap;
   gap: 12px;
 }
-.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
 .footer-legal { display: flex; gap: 20px; }
-.footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color .2s; }
-.footer-legal a:hover { color: rgba(255,255,255,0.6); }
+.footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .2s; }
+.footer-legal a:hover { color: rgba(255,255,255,0.75); }
 .footer-bar {
   height: 3px;
   background: linear-gradient(90deg, var(--terre), var(--lave), var(--lave-light), var(--ambre));
@@ -2200,6 +2239,8 @@ footer {
   .gastro-plats { grid-template-columns: 1fr; }
   .agenda-grid { grid-template-columns: 1fr; }
   .artisans-grid { grid-template-columns: 1fr 1fr; }
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .admin-table th, .admin-table td { padding: 6px 6px; font-size: 0.7rem; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; text-align: center; }
   .nl-form { flex-direction: column; }
@@ -2209,7 +2250,16 @@ footer {
   .innovation-items { grid-template-columns: 1fr; }
   .archi-spaces { grid-template-columns: 1fr; }
   .music-layout { grid-template-columns: 1fr; }
+  .music-main { min-height: 320px; }
   .divider { margin: 0 24px; }
+}
+
+@media (max-width: 600px) {
+  .admin-stats { grid-template-columns: 1fr; }
+  .artisans-grid { grid-template-columns: 1fr; }
+  .instruments-grid { grid-template-columns: repeat(2, 1fr); }
+  .modal { padding: 24px 16px; }
+  .fg-row { grid-template-columns: 1fr; }
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -2221,18 +2271,23 @@ footer {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .ticker-track { animation: none; }
   .rv { opacity: 1; transform: none; }
+  body { cursor: auto; }
+  #cur, #cur-r { display: none; }
 }
 </style>
 </head>
 <body>
+
+<!-- SKIP LINK -->
+<a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
 <!-- CURSEUR -->
 <div id="cur"></div>
 <div id="cur-r"></div>
 
 <!-- NAV -->
-<nav id="nav">
-  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" onclick="toggleNav()">
+<nav id="nav" aria-label="Navigation principale">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu" onclick="toggleNav()">
     <span class="nav-toggle-line"></span>
     <span class="nav-toggle-line"></span>
     <span class="nav-toggle-line"></span>
@@ -2281,19 +2336,19 @@ footer {
   <div class="hero-right">
     <div class="hero-mosaic">
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=500&q=80" alt="Musique Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=600&q=85" alt="Musique Kivu" loading="lazy">
         <span class="mosaic-label">A — Arts</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=500&q=80" alt="Architecture Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=600&q=85" alt="Architecture Kivu" loading="lazy">
         <span class="mosaic-label">B — Architecture</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1574270981993-f6b7e2e2e5c5?w=500&q=80" alt="Artisanat Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=600&q=85" alt="Artisanat Kivu" loading="lazy">
         <span class="mosaic-label">C — Artisanat</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80" alt="Innovation Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=85" alt="Innovation Kivu" loading="lazy">
         <span class="mosaic-label">D — Innovation</span>
       </div>
     </div>
@@ -2350,7 +2405,7 @@ footer {
   </div>
   <div class="music-layout rv">
     <div class="music-main">
-      <img src="https://images.unsplash.com/photo-1504509546545-e000b4a62425?w=700&q=80" alt="Musique Kivu" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=700&q=85" alt="Musique Kivu" loading="lazy">
       <div class="music-main-overlay">
         <p class="music-main-tag">Musique Vivante</p>
         <h3 class="music-main-title">La Rumba du Kivu</h3>
@@ -2458,7 +2513,7 @@ footer {
   <div class="cinema-layout rv">
     <div>
       <div class="cinema-featured">
-        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=700&q=80" alt="Cinéma Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=700&q=85" alt="Cinéma Kivu" loading="lazy">
         <div class="cinema-play"><div class="play-btn">&#9654;</div></div>
       </div>
       <div style="margin-top:16px;">
@@ -2477,7 +2532,7 @@ footer {
         </div>
       </div>
       <div class="cinema-item">
-        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&q=80" alt="" loading="lazy"></div>
+        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&q=80" alt="" loading="lazy"></div>
         <div>
           <p class="cinema-item-type">Court-Métrage</p>
           <p class="cinema-item-title">Nouvelle Vague de Goma</p>
@@ -2493,7 +2548,7 @@ footer {
         </div>
       </div>
       <div class="cinema-item">
-        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1593620659536-aa74b8ca5ea5?w=300&q=80" alt="" loading="lazy"></div>
+        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=300&q=80" alt="" loading="lazy"></div>
         <div>
           <p class="cinema-item-type">Danse Contemporaine</p>
           <p class="cinema-item-title">Compagnie Moto Moto, Goma</p>
@@ -2518,7 +2573,7 @@ footer {
 
   <!-- Architecture Hero -->
   <div class="archi-hero rv">
-    <img src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=1200&q=80" alt="Architecture Kivu" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=1200&q=80" alt="Architecture Kivu" loading="lazy">
     <div class="archi-hero-overlay">
       <span class="chip chip-ambre" style="margin-bottom:14px;">Paysage Urbain</span>
       <h3 style="font-family:var(--font-sans);font-size:2.2rem;font-weight:var(--fw-heading);color:var(--blanc);letter-spacing:var(--ls-heading);margin-bottom:8px;">Goma — La Ville sur la Lave</h3>
@@ -2532,7 +2587,7 @@ footer {
     <div class="archi-types">
       <div class="archi-type">
         <div class="archi-type-img-wrap">
-          <img class="archi-type-img" src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=500&q=80" alt="Case traditionnelle" loading="lazy">
+          <img class="archi-type-img" src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=600&q=85" alt="Case traditionnelle" loading="lazy">
         </div>
         <div class="archi-type-body">
           <p class="archi-type-label" style="color:var(--terre)">Traditionnel</p>
@@ -2542,7 +2597,7 @@ footer {
       </div>
       <div class="archi-type">
         <div class="archi-type-img-wrap">
-          <img class="archi-type-img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=80" alt="Architecture coloniale Bukavu" loading="lazy">
+          <img class="archi-type-img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=85" alt="Architecture coloniale Bukavu" loading="lazy">
         </div>
         <div class="archi-type-body">
           <p class="archi-type-label" style="color:var(--terre)">Colonial Repris</p>
@@ -2552,7 +2607,7 @@ footer {
       </div>
       <div class="archi-type">
         <div class="archi-type-img-wrap">
-          <img class="archi-type-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="Construction pierre volcanique" loading="lazy">
+          <img class="archi-type-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85" alt="Construction pierre volcanique" loading="lazy">
         </div>
         <div class="archi-type-body">
           <p class="archi-type-label" style="color:var(--terre)">Contemporain Local</p>
@@ -2562,7 +2617,7 @@ footer {
       </div>
       <div class="archi-type">
         <div class="archi-type-img-wrap">
-          <img class="archi-type-img" src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&q=80" alt="Terres cuites rouge" loading="lazy">
+          <img class="archi-type-img" src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=85" alt="Terres cuites rouge" loading="lazy">
         </div>
         <div class="archi-type-body">
           <p class="archi-type-label" style="color:var(--terre)">Matériau Ancestral</p>
@@ -2630,7 +2685,7 @@ footer {
   </div>
   <div class="textiles-grid rv">
     <div class="textile-item">
-      <img src="https://images.unsplash.com/photo-1574270981993-f6b7e2e2e5c5?w=600&q=80" alt="Tissu Kivu" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=600&q=80" alt="Tissu Kivu" loading="lazy">
       <div class="textile-overlay">
         <p class="textile-community">Communauté Bashi</p>
         <h4 class="textile-name">Tissu Ndele de Cérémonie</h4>
@@ -2672,7 +2727,7 @@ footer {
   </div>
   <div class="gastro-header rv">
     <div class="gastro-img">
-      <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=700&q=80" alt="Gastronomie Kivu" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=700&q=85" alt="Gastronomie Kivu" loading="lazy">
     </div>
     <div>
       <h4 style="font-family:var(--font-sans);font-size:1.5rem;font-weight:var(--fw-heading);letter-spacing:var(--ls-heading);color:var(--noir);margin-bottom:14px;">Une cuisine de montagne,<br>de lac et de forêt</h4>
@@ -2683,7 +2738,7 @@ footer {
   </div>
   <div class="gastro-plats rv">
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1578020226954-96c7a7fcf94c?w=400&q=80" alt="Sambaza" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=85" alt="Sambaza" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Lac Kivu</p>
         <h4 class="plat-name">Sambaza Grillé</h4>
@@ -2692,7 +2747,7 @@ footer {
       </div>
     </div>
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1740993382497-65dba6c7a689?w=400&q=80" alt="Foufou Pondu" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1740993382497-65dba6c7a689?w=400&q=85" alt="Foufou Pondu" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Toute la région</p>
         <h4 class="plat-name">Foufou & Pondu</h4>
@@ -2701,7 +2756,7 @@ footer {
       </div>
     </div>
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1722072391426-964abfef1924?w=400&q=80" alt="Matoke" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1722072391426-964abfef1924?w=400&q=85" alt="Matoke" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Hauts Plateaux</p>
         <h4 class="plat-name">Matoke & Makemba</h4>
@@ -2710,7 +2765,7 @@ footer {
       </div>
     </div>
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1594999945795-e570338fdd12?w=400&q=80" alt="Brochettes" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=85" alt="Brochettes" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Goma / Bukavu</p>
         <h4 class="plat-name">Brochettes de Chèvre & Boeuf</h4>
@@ -2719,7 +2774,7 @@ footer {
       </div>
     </div>
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1756741987051-a6a38f28838b?w=400&q=80" alt="Urwagwa" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1722072391426-964abfef1924?w=400&q=85" alt="Urwagwa" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Communauté Shi & Bashi</p>
         <h4 class="plat-name">Urwagwa — Bière de Sorgho</h4>
@@ -2728,7 +2783,7 @@ footer {
       </div>
     </div>
     <div class="plat-card">
-      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1553272711-3caf410bcb67?w=400&q=80" alt="Café Kivu" loading="lazy"></div>
+      <div class="plat-img-wrap"><img class="plat-card-img" src="https://images.unsplash.com/photo-1740993382497-65dba6c7a689?w=400&q=85" alt="Café Kivu" loading="lazy"></div>
       <div class="plat-card-body">
         <p class="plat-region">Terroir Nord & Sud-Kivu</p>
         <h4 class="plat-name">Café Arabica du Kivu</h4>
@@ -2822,7 +2877,7 @@ footer {
   <div class="artisans-grid rv">
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=400&q=80" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=400&q=85" alt="Artisan" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain">Sculpture sur bois</p>
@@ -2832,7 +2887,7 @@ footer {
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&q=80" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&q=85" alt="Artisan" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:var(--lave)">Peinture contemporaine</p>
@@ -2842,7 +2897,7 @@ footer {
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=85" alt="Artisan" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:var(--lac)">Photographie documentaire</p>
@@ -2852,7 +2907,7 @@ footer {
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1560785496-3c9d27877182?w=400&q=80" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1560785496-3c9d27877182?w=400&q=85" alt="Artisan" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:#9C6C00">Tissage & Textiles</p>
@@ -2975,10 +3030,11 @@ footer {
     </div>
   </div>
   <div class="rv rv-d2">
-    <div class="nl-form">
-      <input type="email" class="nl-input" placeholder="votre@email.com" id="nl-email">
-      <button class="nl-btn" id="nl-btn">S'abonner</button>
-    </div>
+    <form class="nl-form" id="nl-form">
+      <label for="nl-email" class="visually-hidden">Adresse email</label>
+      <input type="email" class="nl-input" placeholder="votre@email.com" id="nl-email" autocomplete="email" required>
+      <button class="nl-btn" id="nl-btn" type="submit">S'abonner</button>
+    </form>
     <p class="nl-note">Désabonnement en un clic. Aucune donnée revendue.</p>
     <div style="margin-top:32px;">
       <p style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:12px;text-transform:none;letter-spacing:0;font-family:var(--font-sans);">Paiement sécurisé</p>
@@ -3205,6 +3261,49 @@ footer {
 const c = document.getElementById('cur'), cr = document.getElementById('cur-r');
 let mx=0, my=0, rx=0, ry=0;
 document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+
+// ── Toast & Confirm ──
+function showToast(msg, isError) {
+  const existing = document.querySelector('.kivu-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'kivu-toast';
+  Object.assign(toast.style, {
+    position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+    background: isError ? '#8A1C42' : '#28613A', color: '#fff',
+    padding: '14px 24px', borderRadius: '10px', fontFamily: 'var(--font-sans)',
+    fontSize: '0.9rem', fontWeight: '600', zIndex: '99999',
+    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', animation: 'fadeInUp .3s forwards',
+  });
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+}
+function confirmAction(msg) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, {
+      position: 'fixed', inset: '0', background: 'rgba(20,16,8,0.6)', zIndex: '99999',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)',
+    });
+    const box = document.createElement('div');
+    Object.assign(box.style, {
+      background: '#fff', borderRadius: '12px', padding: '28px', maxWidth: '360px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.3)', textAlign: 'center',
+    });
+    box.innerHTML = `<p style="font-size:1rem;color:var(--noir);margin-bottom:20px;line-height:1.5;">${msg}</p>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-dark" style="flex:1;justify-content:center;" id="confirm-yes">Confirmer</button>
+        <button class="btn btn-outline" style="flex:1;justify-content:center;" id="confirm-no">Annuler</button>
+      </div>`;
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    document.getElementById('confirm-yes').addEventListener('click', () => { overlay.remove(); resolve(true); });
+    document.getElementById('confirm-no').addEventListener('click', () => { overlay.remove(); resolve(false); });
+    overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); resolve(false); } });
+    document.getElementById('confirm-yes').focus();
+  });
+}
 document.addEventListener('error', e => {
   if (e.target instanceof HTMLImageElement && !e.target.dataset.fallback) {
     e.target.dataset.fallback = '1';
@@ -3228,6 +3327,7 @@ function toggleNav() {
   const toggle = document.getElementById('nav-toggle');
   const isOpen = menu.classList.toggle('open');
   toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   document.body.classList.toggle('body-scroll-lock', isOpen);
 }
 function closeNav() {
@@ -3235,6 +3335,7 @@ function closeNav() {
   const toggle = document.getElementById('nav-toggle');
   menu.classList.remove('open');
   toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
   document.body.classList.remove('body-scroll-lock');
 }
 document.addEventListener('keydown', e => {
@@ -3403,6 +3504,7 @@ function openModal(mode) {
     const focusTarget = currentUser ? document.getElementById('auth-signout') : document.getElementById('auth-email');
     if (focusTarget) focusTarget.focus();
   });
+  previousFocus = document.activeElement;
 }
 
 function closeModal() {
@@ -3413,9 +3515,11 @@ function closeModal() {
   document.getElementById('auth-form-view').hidden = false;
   document.getElementById('account-view').hidden = true;
   document.querySelector('.modal').classList.remove('modal-wide');
+  document.getElementById('modal').setAttribute('aria-labelledby', 'modal-title');
   authModal.classList.remove('open');
   authModal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  if (previousFocus) { previousFocus.focus(); previousFocus = null; }
 }
 
 document.querySelectorAll('[data-auth-mode]').forEach(button => {
@@ -3498,8 +3602,20 @@ document.getElementById('auth-signout').addEventListener('click', async () => {
   setAuthFeedback(authFeedback, 'Vous etes deconnecte.', 'success');
 });
 
+let previousFocus = null;
+
 authModal.addEventListener('click', function(event) { if (event.target === this) closeModal(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && authModal.classList.contains('open')) closeModal(); });
+
+// Focus trap
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Tab' || !authModal.classList.contains('open')) return;
+  const focusable = authModal.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 
 updateAuthNav();
 setAuthMode('signup');
@@ -3537,9 +3653,21 @@ if (authClient) {
     url.searchParams.delete('checkout');
     window.history.replaceState({}, '', url);
     if (checkout === 'success') {
-      setTimeout(() => alert('Paiement réussi ! Votre commande est confirmée.'), 500);
+      setTimeout(() => {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#28613A;color:#fff;padding:14px 24px;border-radius:10px;font-family:var(--font-sans);font-size:0.9rem;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,0.2);animation:fadeInUp .3s forwards;';
+        toast.textContent = 'Paiement réussi ! Votre commande est confirmée.';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+      }, 500);
     } else {
-      setTimeout(() => alert('Paiement annulé. Vous pouvez réessayer.'), 500);
+      setTimeout(() => {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#8A1C42;color:#fff;padding:14px 24px;border-radius:10px;font-family:var(--font-sans);font-size:0.9rem;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,0.2);animation:fadeInUp .3s forwards;';
+        toast.textContent = 'Paiement annulé. Vous pouvez réessayer.';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+      }, 500);
     }
   }
 })();
@@ -3756,7 +3884,7 @@ function renderMyArtworks(artworks, pubCount) {
       </div>`;
     }
     item.innerHTML = `
-      <img class="artwork-item-thumb" src="${sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=100&q=60'}" alt="" loading="lazy">
+      <img class="artwork-item-thumb" src="${sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=150&q=85'}" alt="" loading="lazy">
       <div class="artwork-item-info">
         <div class="artwork-item-title">${escapeHtml(a.title)}</div>
         <div class="artwork-item-meta">${escapeHtml(a.category)} — ${price} ${sym}</div>
@@ -3802,7 +3930,7 @@ async function archiveArtwork(id) {
 
 async function deleteArtwork(id) {
   if (!authClient || !currentUser) return;
-  if (!confirm('Supprimer cette œuvre définitivement ?')) return;
+  if (!await confirmAction('Supprimer cette œuvre définitivement ?')) return;
   setAuthFeedback(accountFeedback, '', '');
   try {
     const { error } = await authClient.from('artworks').delete().eq('id', id).eq('artisan_id', currentUser.id);
@@ -3903,7 +4031,7 @@ function buyArtwork(artworkId) {
     : 'Artisan';
   const price = (artwork.price_cents / 100).toFixed(2);
   const sym = currencySymbol(artwork.currency || 'USD');
-  const img = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=60';
+  const img = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85';
   container.innerHTML = `
     <div class="purchase-preview">
       <img class="purchase-preview-img" src="${img}" alt="" loading="lazy">
@@ -3918,6 +4046,7 @@ function buyArtwork(artworkId) {
     <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:8px;" onclick="closeModal()">Annuler</button>
   `;
   document.getElementById('purchase-title').textContent = 'Confirmer l\'achat';
+  document.getElementById('modal').setAttribute('aria-labelledby', 'purchase-title');
   document.getElementById('auth-form-view').hidden = true;
   document.getElementById('account-view').hidden = true;
   document.getElementById('artisan-public-view').hidden = true;
@@ -4171,7 +4300,7 @@ async function renderAdminEvents(el) {
     el.innerHTML = html;
     el.querySelectorAll('.admin-event-delete').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Supprimer cet événement ?')) return;
+        if (!await confirmAction('Supprimer cet événement ?')) return;
         try {
           const { error: delErr } = await authClient.from('events').delete().eq('id', btn.dataset.id);
           if (delErr) throw delErr;
@@ -4347,6 +4476,7 @@ function openArtisanProfile(profileId) {
   document.getElementById('auth-form-view').hidden = true;
   document.getElementById('account-view').hidden = true;
   document.getElementById('artisan-public-view').hidden = false;
+  document.getElementById('modal').setAttribute('aria-labelledby', 'artisan-public-content');
   document.getElementById('modal').classList.add('open');
   document.getElementById('modal').setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -4375,7 +4505,7 @@ async function loadArtisanProfile(profileId) {
     const artworks = artworksRes.data || [];
     const fullName = [profile.first_name, profile.last_name].filter(Boolean).join(' ') || 'Artisan KIVU';
     const roleLabel = roleLabels[profile.role] || 'Artisan';
-    const avatar = 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&q=80';
+    const avatar = 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&q=85';
 
     let artworksHtml = '';
     if (!artworks.length) {
@@ -4384,8 +4514,8 @@ async function loadArtisanProfile(profileId) {
       artworksHtml = artworks.map(a => {
         const price = (a.price_cents / 100).toFixed(2);
         const sym = currencySymbol(a.currency || 'USD');
-        const img = sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=60';
-        return `<div class="artisan-profile-card" onclick="closeArtisanProfile();">
+        const img = sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85';
+        return `<div class="artisan-profile-card" onclick="closeArtisanProfile();" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')event.preventDefault(),closeArtisanProfile();">
           <img src="${img}" alt="${escapeHtml(a.title)}" loading="lazy">
           <div class="artisan-profile-card-body">
             <div class="artisan-profile-card-title">${escapeHtml(a.title)}</div>
@@ -4493,7 +4623,7 @@ function renderCatalog() {
       <div class="market-body">
         <p class="market-cat">${escapeHtml(artwork.category)}</p>
         <h4 class="market-name">${escapeHtml(artwork.title)}</h4>
-        <p class="market-artist" style="cursor:pointer;" onclick="openArtisanProfile('${artwork.artisan_id}')">${escapeHtml(artisanName)}</p>
+        <p class="market-artist" style="cursor:pointer;" onclick="openArtisanProfile('${artwork.artisan_id}')" onkeydown="if(event.key==='Enter'||event.key===' ')event.preventDefault(),openArtisanProfile('${artwork.artisan_id}')" tabindex="0" role="button">${escapeHtml(artisanName)}</p>
         <div class="market-footer">
           <div class="market-price">${price} ${sym}<span>Prix artiste</span></div>
           <button class="btn btn-sm btn-lave" onclick="buyArtwork('${artwork.id}'); return false;">Acheter</button>
