@@ -289,3 +289,51 @@ drop policy if exists newsletter_select_admin on public.newsletter_subscribers;
 create policy newsletter_select_admin
 on public.newsletter_subscribers for select
 using (public.is_admin());
+
+-- Contact messages
+create table if not exists public.messages (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.messages enable row level security;
+drop policy if exists messages_insert_public on public.messages;
+create policy messages_insert_public
+on public.messages for insert
+with check (true);
+
+drop policy if exists messages_select_admin on public.messages;
+create policy messages_select_admin
+on public.messages for select
+using (public.is_admin());
+
+-- Reviews / ratings
+create table if not exists public.reviews (
+  id uuid primary key default gen_random_uuid(),
+  artwork_id uuid not null references public.artworks(id) on delete cascade,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  rating smallint not null check (rating >= 1 and rating <= 5),
+  comment text,
+  created_at timestamptz not null default now(),
+  unique(artwork_id, user_id)
+);
+
+alter table public.reviews enable row level security;
+drop policy if exists reviews_select_public on public.reviews;
+create policy reviews_select_public
+on public.reviews for select
+using (true);
+
+drop policy if exists reviews_insert_authenticated on public.reviews;
+create policy reviews_insert_authenticated
+on public.reviews for insert
+with check (auth.uid() = user_id);
+
+drop policy if exists reviews_update_owner on public.reviews;
+create policy reviews_update_owner
+on public.reviews for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);

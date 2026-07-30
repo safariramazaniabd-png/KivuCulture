@@ -1,14 +1,41 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" x-data="app()" x-init="init()">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KIVU — Culture & Productions Matérielles du Congo Oriental</title>
+<meta name="description" content="Découvrez la richesse culturelle du Kivu : artisanat, musique, gastronomie, littérature et traditions des peuples du Congo oriental.">
+<meta name="theme-color" content="#141008">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="KIVU — Culture & Productions du Congo Oriental">
+<meta property="og:description" content="Artisanat, musique, gastronomie, littérature et traditions des peuples du Kivu.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1594999945795-e570338fdd12?w=1200&q=80">
+<meta property="og:url" content="https://kivu-culture.netlify.app">
+<meta property="og:locale" content="fr_FR">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KIVU — Culture & Productions du Congo Oriental">
+<meta name="twitter:description" content="Artisanat, musique, gastronomie, littérature et traditions des peuples du Kivu.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1594999945795-e570338fdd12?w=1200&q=80">
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "KIVU Culture",
+  "url": "https://kivu-culture.netlify.app",
+  "description": "Plateforme culturelle dédiée au Kivu (RDC).",
+  "inLanguage": "fr-FR",
+  "publisher": { "@type": "Organization", "name": "KIVU Culture" }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23141008'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23B8924A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.x/dist/cdn.min.js"></script>
 <noscript><style>.rv{opacity:1!important;transform:none!important}.catalog-loading,.agenda-status{display:none!important}.catalog-empty{display:block!important}</style></noscript>
 <style>
 /* ──────────────────────────────────────────
@@ -53,7 +80,28 @@
   --lh-body: 1.65;
 }
 
-html { scroll-behavior: smooth; }
+/* ── Dark Mode ── */
+[data-theme="dark"] {
+  --noir:        #F0E5CC;
+  --navy:        #C4AA7A;
+  --blanc:       #141008;
+  --off-white:   #1E1608;
+  --gris-light:  #2A2210;
+  --gris-mid:    #6B5220;
+  --gris-text:   #9A7C3A;
+  --card-bg:     #1E1608;
+  --section-alt: #1A1208;
+  --lave:        #B8924A;
+  --lave-light:  #D4AA62;
+  --foret:       #C49038;
+  --foret-light: #D4AA62;
+  --lac:         #9A7C3A;
+  --lac-light:   #C4AA7A;
+  --ambre:       #E8CC8A;
+  --terre:       #C49038;
+}
+
+html { scroll-behavior: smooth; transition: background .3s, color .3s; }
 
 body {
   background: var(--blanc);
@@ -162,6 +210,18 @@ nav.up {
   padding: 9px 22px !important;
 }
 .nav-cta:hover { background: var(--lave) !important; color: var(--noir) !important; }
+
+.nav-dark-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--gris-text);
+  transition: color .2s, background .2s;
+}
+.nav-dark-toggle:hover { color: var(--noir); background: var(--gris-light); }
 
 .nav-toggle {
   display: block;
@@ -1196,6 +1256,24 @@ textarea:focus-visible:not(:active),
 }
 .market-card:hover { box-shadow: 0 10px 36px rgba(0,0,0,0.12); transform: translateY(-4px); }
 .market-img-wrap { overflow: hidden; position: relative; }
+.fav-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, background .2s;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.fav-btn:hover { transform: scale(1.15); background: #fff; }
+.fav-btn.fav-active { background: #FCE4EC; }
 .market-img {
   width: 100%;
   aspect-ratio: 1;
@@ -2323,6 +2401,7 @@ footer {
     <li><a href="#artisanat" onclick="closeNav()">Artisanat</a></li>
     <li><a href="#technologie" onclick="closeNav()">Innovation</a></li>
     <li><a href="#marketplace" onclick="closeNav()">Boutique</a></li>
+    <li><button class="nav-dark-toggle" @click="toggleTheme()" x-html="theme === 'dark' ? '&#9789;' : '&#9788;'" :aria-label="theme === 'dark' ? 'Mode clair' : 'Mode sombre'" title="Basculer le thème"></button></li>
     <li><a href="#" class="nav-cta" id="auth-nav-link" onclick="openModal(); closeNav(); return false;">Rejoindre</a></li>
   </ul>
 </nav>
@@ -3110,15 +3189,13 @@ footer {
       </ul>
     </div>
     <div>
-      <p class="footer-col-title">À Propos</p>
-      <ul class="footer-links">
-        <li><a href="#">Notre Mission</a></li>
-        <li><a href="#">L'Équipe</a></li>
-        <li><a href="#">Presse</a></li>
-        <li><a href="#">Partenaires</a></li>
-        <li><a href="#">Contact — Goma</a></li>
-        <li><a href="#">Contact — Bukavu</a></li>
-      </ul>
+      <p class="footer-col-title">Contact</p>
+      <form id="contact-form" style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" name="name" placeholder="Votre nom" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);">
+        <input type="email" name="email" placeholder="Votre email" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);">
+        <textarea name="message" placeholder="Votre message" required rows="3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);resize:vertical;"></textarea>
+        <button type="submit" style="background:var(--lave);color:var(--noir);border:none;border-radius:6px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Envoyer</button>
+      </form>
     </div>
   </div>
   <div class="footer-bottom">
@@ -3183,6 +3260,7 @@ footer {
 
         <div class="acct-tabs" id="acct-tabs" hidden>
           <button class="acct-tab active" type="button" data-acct-view="profile">Profil</button>
+          <button class="acct-tab" type="button" data-acct-view="favorites">Favoris <span id="fav-count" style="display:none;background:var(--lave);color:var(--noir);border-radius:50%;width:20px;height:20px;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center;margin-left:6px;"></span></button>
           <button class="acct-tab" type="button" data-acct-view="artworks">Mes œuvres</button>
           <button class="acct-tab" type="button" data-acct-view="orders">Mes commandes</button>
           <button class="acct-tab" type="button" data-acct-view="certs">Certificats</button>
@@ -3204,6 +3282,14 @@ footer {
             <div class="fg"><label for="prof-city">Ville / Territoire</label><input id="prof-city" name="city" type="text" placeholder="Goma, Bukavu, Uvira..."></div>
             <button class="btn btn-lave" type="submit" style="width:100%;justify-content:center;">Enregistrer le profil</button>
           </form>
+        </div>
+
+        <!-- Favorites view -->
+        <div id="acct-favorites" hidden>
+          <p style="font-size:0.85rem;color:var(--gris-text);margin-bottom:12px;">Œuvres que vous avez aimées. <span id="fav-count-label"></span></p>
+          <div id="favorites-container" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <p style="font-size:0.85rem;color:var(--gris-text);grid-column:1/-1;">Aucun favori pour le moment.</p>
+          </div>
         </div>
 
         <!-- Orders view -->
@@ -3282,6 +3368,23 @@ footer {
 <script src="supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// ── Alpine.js App ──
+function app() {
+  return {
+    theme: localStorage.getItem('kivu-theme') || 'light',
+    init() {
+      document.documentElement.setAttribute('data-theme', this.theme);
+      document.documentElement.style.setProperty('color-scheme', this.theme);
+    },
+    toggleTheme() {
+      this.theme = this.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('kivu-theme', this.theme);
+      document.documentElement.setAttribute('data-theme', this.theme);
+      document.documentElement.style.setProperty('color-scheme', this.theme);
+    }
+  };
+}
+
 // ── Curseur ──
 const c = document.getElementById('cur'), cr = document.getElementById('cur-r');
 let mx=0, my=0, rx=0, ry=0;
@@ -3743,6 +3846,7 @@ async function resetPassword() {
 const profileForm = document.getElementById('profile-form');
 const acctTabs = document.getElementById('acct-tabs');
 const acctProfile = document.getElementById('acct-profile');
+const acctFavorites = document.getElementById('acct-favorites');
 const acctArtworks = document.getElementById('acct-artworks');
 const acctOrders = document.getElementById('acct-orders');
 const acctCerts = document.getElementById('acct-certs');
@@ -3762,6 +3866,7 @@ document.querySelectorAll('[data-acct-view]').forEach(btn => {
     const view = btn.dataset.acctView;
     document.querySelectorAll('[data-acct-view]').forEach(b => b.classList.toggle('active', b === btn));
     acctProfile.hidden = view !== 'profile';
+    acctFavorites.hidden = view !== 'favorites';
     acctArtworks.hidden = view !== 'artworks';
     acctOrders.hidden = view !== 'orders';
     acctCerts.hidden = view !== 'certs';
@@ -3770,6 +3875,7 @@ document.querySelectorAll('[data-acct-view]').forEach(btn => {
     if (view === 'orders') loadMyOrders();
     if (view === 'certs') loadMyCertificates();
     if (view === 'admin') loadAdminDashboard();
+    if (view === 'favorites') updateFavoritesUI();
   });
 });
 
@@ -4640,10 +4746,13 @@ function renderCatalog() {
 
     const card = document.createElement('div');
     card.className = 'market-card';
+    const artId = artwork.id;
+    const isFav = getFavorites().includes(artId);
     card.innerHTML = `
       <div class="market-img-wrap">
         <img class="market-img" src="${imgSrc}" alt="${artwork.title}" loading="lazy">
         <span class="market-badge ${badgeClass}">${badgeText}</span>
+        <button class="fav-btn ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation();toggleFavorite('${artId}');this.classList.toggle('fav-active');" aria-label="${isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}">${isFav ? '❤️' : '🤍'}</button>
       </div>
       <div class="market-body">
         <p class="market-cat">${escapeHtml(artwork.category)}</p>
@@ -4651,7 +4760,7 @@ function renderCatalog() {
         <p class="market-artist" style="cursor:pointer;" onclick="openArtisanProfile('${artwork.artisan_id}')" onkeydown="if(event.key==='Enter'||event.key===' ')event.preventDefault(),openArtisanProfile('${artwork.artisan_id}')" tabindex="0" role="button">${escapeHtml(artisanName)}</p>
         <div class="market-footer">
           <div class="market-price">${price} ${sym}<span>Prix artiste</span></div>
-          <button class="btn btn-sm btn-lave" onclick="buyArtwork('${artwork.id}'); return false;">Acheter</button>
+          <button class="btn btn-sm btn-lave" onclick="buyArtwork('${artId}'); return false;">Acheter</button>
         </div>
       </div>
     `;
@@ -4688,6 +4797,56 @@ if (typeof authClient !== 'undefined') {
     setTimeout(() => clearInterval(checkClient), 10000);
   }
 }
+
+// ── Favoris ──
+function getFavorites() {
+  try { return JSON.parse(localStorage.getItem('kivu-favs') || '[]'); } catch { return []; }
+}
+function toggleFavorite(id) {
+  let favs = getFavorites();
+  const idx = favs.indexOf(id);
+  if (idx > -1) favs.splice(idx, 1); else favs.push(id);
+  localStorage.setItem('kivu-favs', JSON.stringify(favs));
+  const count = favs.length;
+  const badge = document.getElementById('fav-count');
+  if (badge) { badge.textContent = count; badge.style.display = count ? 'flex' : 'none'; }
+  updateFavoritesUI();
+}
+async function updateFavoritesUI() {
+  const container = document.getElementById('favorites-container');
+  if (!container) return;
+  const favs = getFavorites();
+  const label = document.getElementById('fav-count-label');
+  if (label) label.textContent = favs.length + ' œuvre' + (favs.length > 1 ? 's' : '');
+  if (!favs.length) { container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);grid-column:1/-1;">Aucun favori pour le moment.</p>'; return; }
+  if (!authClient) { container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);grid-column:1/-1;">Connectez-vous pour voir vos favoris.</p>'; return; }
+  try {
+    const { data } = await authClient.from('artworks').select('*').in('id', favs);
+    if (data && data.length) {
+      container.innerHTML = data.map(a => {
+        const price = (a.price_cents / 100).toFixed(2);
+        return `<div class="market-card" style="cursor:default;"><div class="market-body"><h4 class="market-name">${escapeHtml(a.title)}</h4><p class="market-cat">${escapeHtml(a.category||'')}</p><div class="market-footer"><div class="market-price">${price} $<span>Prix</span></div><button class="btn btn-sm btn-lave" onclick="buyArtwork('${a.id}');">Acheter</button></div></div></div>`;
+      }).join('');
+    } else {
+      container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);grid-column:1/-1;">Œuvres non trouvées.</p>';
+    }
+  } catch { container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);grid-column:1/-1;">Erreur de chargement.</p>'; }
+}
+
+// ── Formulaire de contact ──
+document.addEventListener('submit', function(e) {
+  if (e.target.id !== 'contact-form') return;
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  const data = Object.fromEntries(new FormData(e.target));
+  if (!authClient) { showToast('Service indisponible', true); btn.disabled = false; btn.textContent = 'Envoyer'; return; }
+  authClient.from('messages').insert(data).then(({ error }) => {
+    if (error) { showToast('Erreur lors de l\'envoi', true); btn.textContent = 'Erreur'; }
+    else { showToast('Message envoyé ✓'); e.target.reset(); btn.textContent = 'Envoyé ✓'; }
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Envoyer'; }, 2000);
+  });
+});
 
 // ── Newsletter ──
 document.getElementById('nl-btn').addEventListener('click', async function(){
