@@ -1961,6 +1961,11 @@ textarea:focus-visible:not(:active),
   color: var(--gris-text);
 }
 
+/* ── Messagerie ── */
+.conv-item:hover { background: var(--gris-light); }
+#thread-messages::-webkit-scrollbar { width: 4px; }
+#thread-messages::-webkit-scrollbar-thumb { background: var(--gris-mid); border-radius: 4px; }
+
 /* ── Purchase confirmation ── */
 .purchase-preview {
   display: flex;
@@ -3260,6 +3265,7 @@ footer {
 
         <div class="acct-tabs" id="acct-tabs" hidden>
           <button class="acct-tab active" type="button" data-acct-view="profile">Profil</button>
+          <button class="acct-tab" type="button" data-acct-view="messages">Messages</button>
           <button class="acct-tab" type="button" data-acct-view="favorites">Favoris <span id="fav-count" style="display:none;background:var(--lave);color:var(--noir);border-radius:50%;width:20px;height:20px;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center;margin-left:6px;"></span></button>
           <button class="acct-tab" type="button" data-acct-view="artworks">Mes œuvres</button>
           <button class="acct-tab" type="button" data-acct-view="orders">Mes commandes</button>
@@ -3282,6 +3288,19 @@ footer {
             <div class="fg"><label for="prof-city">Ville / Territoire</label><input id="prof-city" name="city" type="text" placeholder="Goma, Bukavu, Uvira..."></div>
             <button class="btn btn-lave" type="submit" style="width:100%;justify-content:center;">Enregistrer le profil</button>
           </form>
+        </div>
+
+        <!-- Messages view -->
+        <div id="acct-messages" hidden>
+          <p style="font-size:0.85rem;color:var(--gris-text);margin-bottom:12px;">Vos conversations avec les artisans.</p>
+          <div id="conversation-list"></div>
+          <div id="message-thread" hidden style="margin-top:16px;border-top:1px solid #E8E3DC;padding-top:16px;">
+            <div id="thread-messages" style="max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+            <form id="msg-form" style="display:flex;gap:8px;">
+              <input type="text" id="msg-input" placeholder="Votre message..." required style="flex:1;border:1px solid #E8E3DC;border-radius:8px;padding:10px 14px;font-family:var(--font-sans);font-size:0.85rem;">
+              <button type="submit" class="btn btn-sm btn-lave">Envoyer</button>
+            </form>
+          </div>
         </div>
 
         <!-- Favorites view -->
@@ -3846,6 +3865,7 @@ async function resetPassword() {
 const profileForm = document.getElementById('profile-form');
 const acctTabs = document.getElementById('acct-tabs');
 const acctProfile = document.getElementById('acct-profile');
+const acctMessages = document.getElementById('acct-messages');
 const acctFavorites = document.getElementById('acct-favorites');
 const acctArtworks = document.getElementById('acct-artworks');
 const acctOrders = document.getElementById('acct-orders');
@@ -3866,6 +3886,7 @@ document.querySelectorAll('[data-acct-view]').forEach(btn => {
     const view = btn.dataset.acctView;
     document.querySelectorAll('[data-acct-view]').forEach(b => b.classList.toggle('active', b === btn));
     acctProfile.hidden = view !== 'profile';
+    acctMessages.hidden = view !== 'messages';
     acctFavorites.hidden = view !== 'favorites';
     acctArtworks.hidden = view !== 'artworks';
     acctOrders.hidden = view !== 'orders';
@@ -3876,6 +3897,7 @@ document.querySelectorAll('[data-acct-view]').forEach(btn => {
     if (view === 'certs') loadMyCertificates();
     if (view === 'admin') loadAdminDashboard();
     if (view === 'favorites') updateFavoritesUI();
+    if (view === 'messages') loadConversations();
   });
 });
 
@@ -4662,6 +4684,7 @@ async function loadArtisanProfile(profileId) {
         <div class="artisan-profile-name">${escapeHtml(fullName)}</div>
         <div class="artisan-profile-role">${escapeHtml(roleLabel)} ${profile.verification_status === 'verified' ? '<span style="display:inline-block;background:#E8F5E9;color:#28613A;font-size:0.6rem;padding:2px 7px;border-radius:4px;margin-left:6px;font-weight:var(--fw-subheading);">Vérifié</span>' : ''}</div>
         ${profile.city ? '<div class="artisan-profile-loc">' + escapeHtml(profile.city) + '</div>' : ''}
+        <button class="btn btn-sm btn-lave" onclick="startConversation('${profileId}', null);" style="margin-top:10px;">Contacter</button>
       </div>
       <h3 style="font-family:var(--font-sans);font-size:1rem;font-weight:var(--fw-subheading);margin-bottom:14px;">Œuvres publiées (${artworks.length})</h3>
       <div class="artisan-profile-grid">${artworksHtml}</div>
@@ -4797,6 +4820,82 @@ if (typeof authClient !== 'undefined') {
     setTimeout(() => clearInterval(checkClient), 10000);
   }
 }
+
+// ── Messagerie ──
+let currentConvId = null;
+let msgChannel = null;
+
+function startConversation(artisanId, artworkId) {
+  if (!authClient || !currentUser) { openModal(); return; }
+  authClient.from('conversations').upsert({
+    buyer_id: currentUser.id,
+    artisan_id: artisanId,
+    artwork_id: artworkId || null
+  }, { onConflict: 'buyer_id,artisan_id,artwork_id' }).select().single().then(({ data, error }) => {
+    if (error) { showToast('Erreur', true); return; }
+    openModal();
+    document.getElementById('auth-form-view').hidden = true;
+    document.getElementById('account-view').hidden = false;
+    document.querySelector('[data-acct-view="messages"]').click();
+    setTimeout(() => openConversation(data.id), 300);
+  });
+}
+
+async function loadConversations() {
+  const list = document.getElementById('conversation-list');
+  if (!list || !authClient || !currentUser) { list.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Connectez-vous pour voir vos messages.</p>'; return; }
+  try {
+    const { data } = await authClient.from('conversations').select('*').order('updated_at', { ascending: false });
+    if (data && data.length) {
+      list.innerHTML = data.map(c => `<div class="conv-item" data-conv="${c.id}" onclick="openConversation('${c.id}')" style="padding:12px;border:1px solid #E8E3DC;border-radius:8px;cursor:pointer;margin-bottom:8px;transition:background .2s;" onmouseover="this.style.background='var(--gris-light)'" onmouseout="this.style.background=''"><strong style="color:var(--noir);">${escapeHtml(c.last_message || 'Nouvelle conversation')}</strong><br><span style="font-size:0.78rem;color:var(--gris-text);">${c.artisan_id === currentUser.id ? 'Acheteur' : 'Artisan'}</span></div>`).join('');
+    } else {
+      list.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Aucune conversation.</p>';
+    }
+  } catch { list.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>'; }
+}
+
+async function openConversation(convId) {
+  currentConvId = convId;
+  document.getElementById('message-thread').hidden = false;
+  const container = document.getElementById('thread-messages');
+  container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Chargement…</p>';
+  if (msgChannel) { msgChannel.unsubscribe(); msgChannel = null; }
+  try {
+    const { data } = await authClient.from('chat_messages').select('*').eq('conversation_id', convId).order('created_at', { ascending: true });
+    if (data) renderMessages(data);
+    else container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Aucun message.</p>';
+    msgChannel = authClient.channel('msg-' + convId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: 'conversation_id=eq.' + convId }, payload => {
+      const existing = container.querySelector('[data-msg-id="' + payload.new.id + '"]');
+      if (!existing) { renderMessages([payload.new], true); }
+    }).subscribe();
+  } catch { container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>'; }
+}
+
+function renderMessages(msgs, append) {
+  const container = document.getElementById('thread-messages');
+  if (!append) container.innerHTML = '';
+  msgs.forEach(m => {
+    const isMine = m.sender_id === currentUser?.id;
+    const div = document.createElement('div');
+    div.setAttribute('data-msg-id', m.id);
+    div.style.cssText = 'max-width:80%;padding:10px 14px;border-radius:12px;font-size:0.85rem;line-height:1.5;align-self:' + (isMine ? 'flex-end;background:var(--lave);color:var(--noir);' : 'flex-start;background:var(--gris-light);color:var(--noir);');
+    div.textContent = m.content;
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+document.getElementById('msg-form')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!currentConvId || !authClient || !currentUser) return;
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const { error } = await authClient.from('chat_messages').insert({ conversation_id: currentConvId, sender_id: currentUser.id, content: text });
+  if (error) showToast('Erreur d\'envoi', true);
+  else authClient.from('conversations').update({ last_message: text, last_sender_id: currentUser.id, updated_at: new Date().toISOString() }).eq('id', currentConvId).then();
+});
 
 // ── Favoris ──
 function getFavorites() {

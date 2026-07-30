@@ -337,3 +337,63 @@ create policy reviews_update_owner
 on public.reviews for update
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
+
+-- Messagerie: conversations
+create table if not exists public.conversations (
+  id uuid primary key default gen_random_uuid(),
+  buyer_id uuid not null references public.profiles(id) on delete cascade,
+  artisan_id uuid not null references public.profiles(id) on delete cascade,
+  artwork_id uuid references public.artworks(id) on delete set null,
+  last_message text,
+  last_sender_id uuid references public.profiles(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(buyer_id, artisan_id, artwork_id)
+);
+
+alter table public.conversations enable row level security;
+drop policy if exists conversations_select_participant on public.conversations;
+create policy conversations_select_participant
+on public.conversations for select
+using (buyer_id = auth.uid() or artisan_id = auth.uid());
+
+drop policy if exists conversations_insert_participant on public.conversations;
+create policy conversations_insert_participant
+on public.conversations for insert
+with check (buyer_id = auth.uid() or artisan_id = auth.uid());
+
+-- Messagerie: messages
+create table if not exists public.chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  conversation_id uuid not null references public.conversations(id) on delete cascade,
+  sender_id uuid not null references public.profiles(id) on delete cascade,
+  content text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.chat_messages enable row level security;
+drop policy if exists chat_messages_select_participant on public.chat_messages;
+create policy chat_messages_select_participant
+on public.chat_messages for select
+using (
+  exists (
+    select 1 from public.conversations
+    where conversations.id = chat_messages.conversation_id
+      and (conversations.buyer_id = auth.uid() or conversations.artisan_id = auth.uid())
+  )
+);
+
+drop policy if exists chat_messages_insert_participant on public.chat_messages;
+create policy chat_messages_insert_participant
+on public.chat_messages for insert
+with check (
+  sender_id = auth.uid()
+  and exists (
+    select 1 from public.conversations
+    where conversations.id = conversation_id
+      and (conversations.buyer_id = auth.uid() or conversations.artisan_id = auth.uid())
+  )
+);
+
+-- Enable realtime for chat messages
+alter publication supabase_realtime add table public.chat_messages;
