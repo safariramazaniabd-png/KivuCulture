@@ -485,6 +485,7 @@ nav.up {
 }
 @keyframes slideIn { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
 .hero-right {
   position: relative;
@@ -3795,17 +3796,26 @@ if (authClient) {
 (function() {
   const params = new URLSearchParams(window.location.search);
   const checkout = params.get('checkout');
+  const artworkId = params.get('artwork');
   if (checkout === 'success' || checkout === 'cancel') {
     const url = new URL(window.location);
     url.searchParams.delete('checkout');
+    url.searchParams.delete('artwork');
     window.history.replaceState({}, '', url);
     if (checkout === 'success') {
       setTimeout(() => {
-        const toast = document.createElement('div');
-        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#28613A;color:#fff;padding:14px 24px;border-radius:10px;font-family:var(--font-sans);font-size:0.9rem;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,0.2);animation:fadeInUp .3s forwards;';
-        toast.textContent = 'Paiement réussi ! Votre commande est confirmée.';
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 4000);
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(20,16,8,0.6);z-index:99998;display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .3s ease;';
+        overlay.innerHTML = `
+          <div style="background:var(--blanc);border-radius:16px;padding:48px 40px;max-width:400px;width:100%;text-align:center;animation:fadeInUp .3s forwards;">
+            <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+            <h2 style="font-family:var(--font-sans);font-size:1.5rem;font-weight:var(--fw-heading);color:var(--noir);margin-bottom:8px;">Merci !</h2>
+            <p style="font-size:0.9rem;color:var(--gris-text);line-height:1.6;margin-bottom:24px;">Votre commande a été confirmée. L'artisan vous contactera sous 48h pour finaliser la livraison.</p>
+            ${artworkId ? '<p style="font-size:0.78rem;color:var(--gris-mid);margin-bottom:20px;">Réf. œuvre : ' + artworkId.substring(0,8) + '…</p>' : ''}
+            <button onclick="this.closest('div[style]').parentElement.remove();" class="btn btn-lave" style="width:100%;justify-content:center;">Continuer</button>
+          </div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
       }, 500);
     } else {
       setTimeout(() => {
