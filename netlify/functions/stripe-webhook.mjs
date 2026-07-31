@@ -1,26 +1,55 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
+
+const WEBHOOK_TOLERANCE_SECONDS = 300;
+
+function verifyStripeSignature(payload, sigHeader, secret) {
+  if (!sigHeader) throw new Error('Missing stripe-signature header');
+
+  const parts = sigHeader.split(',').map(p => p.trim());
+  let timestamp = null;
+  let signature = null;
+
+  for (const part of parts) {
+    const [key, value] = part.split('=');
+    if (key === 't') timestamp = value;
+    if (key === 'v1') signature = value;
+  }
+
+  if (!timestamp || !signature) throw new Error('Invalid signature format');
+
+  const t = parseInt(timestamp, 10);
+  if (Number.isNaN(t)) throw new Error('Invalid timestamp');
+  if (Math.abs(Date.now() / 1000 - t) > WEBHOOK_TOLERANCE_SECONDS) {
+    throw new Error('Timestamp outside tolerance window');
+  }
+
+  const expected = createHmac('sha256', secret)
+    .update(`${timestamp}.${payload}`)
+    .digest('hex');
+
+  const expectedBuf = Buffer.from(expected, 'hex');
+  const providedBuf = Buffer.from(signature, 'hex');
+  if (expectedBuf.length !== providedBuf.length) throw new Error('Signature mismatch');
+
+  if (!timingSafeEqual(expectedBuf, providedBuf)) throw new Error('Signature mismatch');
+}
+
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
 
   try {
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!stripeKey || !webhookSecret) throw new Error('Stripe non configuré');
+    if (!webhookSecret) throw new Error('Stripe non configuré');
 
-    const sig = event.headers['stripe-signature'];
-    const body = event.body;
+    const rawBody = event.isBase64Encoded
+      ? Buffer.from(event.body, 'base64').toString('utf8')
+      : event.body;
 
-    const verifyRes = await fetch('https://api.stripe.com/v1/webhook_endpoints', {
-      headers: { 'Authorization': `Bearer ${stripeKey}` },
-    });
+    verifyStripeSignature(rawBody, event.headers['stripe-signature'], webhookSecret);
 
-    let eventPayload;
-    try {
-      eventPayload = JSON.parse(body);
-    } catch {
-      throw new Error('Invalid payload');
-    }
+    const eventPayload = JSON.parse(rawBody);
 
     if (eventPayload.type === 'checkout.session.completed') {
       const session = eventPayload.data.object;
