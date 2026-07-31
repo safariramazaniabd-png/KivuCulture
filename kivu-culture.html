@@ -3111,7 +3111,7 @@ footer {
 </section>
 
 <!-- AGENDA -->
-<section class="section">
+<section class="section" id="agenda">
   <div class="rv">
     <span class="chip chip-lave">Agenda</span>
     <h2 class="section-title">Vivre la culture <span class="hl-lave">en direct</span></h2>
@@ -4374,8 +4374,8 @@ async function loadAdminDashboard() {
 }
 
 function renderAdminMenu(container) {
-  const tabs = ['dashboard', 'users', 'events', 'verifications'];
-  const labels = { dashboard: 'Tableau de bord', users: 'Utilisateurs', events: 'Événements', verifications: 'Vérifications' };
+  const tabs = ['dashboard', 'users', 'events', 'verifications', 'messages', 'reviews'];
+  const labels = { dashboard: 'Tableau de bord', users: 'Utilisateurs', events: 'Événements', verifications: 'Vérifications', messages: 'Messages', reviews: 'Avis' };
   let html = '<div class="admin-sub-tabs">';
   tabs.forEach(t => {
     html += `<button class="admin-sub-tab${adminSubTab === t ? ' active' : ''}" data-admin-tab="${t}">${labels[t]}</button>`;
@@ -4398,6 +4398,8 @@ async function renderAdminView(container) {
     else if (adminSubTab === 'users') await renderAdminUsers(content);
     else if (adminSubTab === 'events') await renderAdminEvents(content);
     else if (adminSubTab === 'verifications') await renderAdminVerifications(content);
+    else if (adminSubTab === 'messages') await renderAdminMessages(content);
+    else if (adminSubTab === 'reviews') await renderAdminReviews(content);
   } catch (err) {
     console.error('Admin view error:', err);
     content.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
@@ -4407,17 +4409,21 @@ async function renderAdminView(container) {
 async function renderAdminDashboard(el) {
   let html = '<div class="admin-stats">';
   try {
-    const [{ count: users }, { count: artworks }, { count: orders }, { count: events }] = await Promise.all([
+    const [{ count: users }, { count: artworks }, { count: orders }, { count: events }, { count: messages }, { count: reviews }] = await Promise.all([
       authClient.from('profiles').select('*', { count: 'exact', head: true }),
       authClient.from('artworks').select('*', { count: 'exact', head: true }),
       authClient.from('orders').select('*', { count: 'exact', head: true }),
       authClient.from('events').select('*', { count: 'exact', head: true }),
+      authClient.from('messages').select('*', { count: 'exact', head: true }),
+      authClient.from('reviews').select('*', { count: 'exact', head: true }),
     ]);
     const cards = [
       { num: users ?? 0, label: 'Utilisateurs' },
       { num: artworks ?? 0, label: 'Œuvres' },
       { num: orders ?? 0, label: 'Commandes' },
       { num: events ?? 0, label: 'Événements' },
+      { num: messages ?? 0, label: 'Messages' },
+      { num: reviews ?? 0, label: 'Avis' },
     ];
     cards.forEach(c => {
       html += `<div class="admin-stat-card"><div class="admin-stat-num">${c.num}</div><div class="admin-stat-label">${c.label}</div></div>`;
@@ -4576,6 +4582,56 @@ async function renderAdminVerifications(el) {
     });
   } catch (err) {
     console.error('Admin verifications error:', err);
+    el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
+  }
+}
+
+// ── Admin Messages ──
+async function renderAdminMessages(el) {
+  try {
+    const { data, error } = await authClient.from('messages').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || !data.length) { el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Aucun message de contact.</p>'; return; }
+    let html = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Nom</th><th>Email</th><th>Message</th></tr></thead><tbody>';
+    data.forEach(m => {
+      const d = new Date(m.created_at);
+      const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      html += `<tr><td style="white-space:nowrap;">${dateStr}</td><td>${escapeHtml(m.name)}</td><td><a href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a></td><td style="max-width:400px;word-break:break-word;">${escapeHtml(m.message)}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  } catch (err) {
+    console.error('Admin messages error:', err);
+    el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
+  }
+}
+
+// ── Admin Reviews ──
+async function renderAdminReviews(el) {
+  try {
+    const { data, error } = await authClient.from('reviews').select('*, artworks:artwork_id(title)').order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || !data.length) { el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Aucun avis.</p>'; return; }
+    let html = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Œuvre</th><th>Note</th><th>Commentaire</th><th></th></tr></thead><tbody>';
+    data.forEach(r => {
+      const d = new Date(r.created_at);
+      const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      html += `<tr><td style="white-space:nowrap;">${dateStr}</td><td>${escapeHtml(r.artworks?.title || '—')}</td><td style="color:#d4a017;">${stars}</td><td style="max-width:350px;word-break:break-word;">${escapeHtml(r.comment || '')}</td>
+        <td><button class="admin-sub-tab admin-review-delete" data-id="${r.id}" style="background:var(--lave);color:var(--blanc);">Suppr.</button></td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+    el.querySelectorAll('.admin-review-delete').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await authClient.from('reviews').delete().eq('id', btn.dataset.id);
+          renderAdminReviews(el);
+        } catch (err) { console.error('Review delete error:', err); }
+      });
+    });
+  } catch (err) {
+    console.error('Admin reviews error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }

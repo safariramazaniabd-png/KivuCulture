@@ -11,6 +11,7 @@ create table if not exists public.profiles (
   city text,
   verification_status text not null default 'pending'
     check (verification_status in ('pending', 'verified', 'rejected')),
+  bio text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -338,6 +339,11 @@ on public.reviews for update
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
 
+drop policy if exists reviews_delete_admin on public.reviews;
+create policy reviews_delete_admin
+on public.reviews for delete
+using (public.is_admin());
+
 -- Messagerie: conversations
 create table if not exists public.conversations (
   id uuid primary key default gen_random_uuid(),
@@ -395,5 +401,16 @@ with check (
   )
 );
 
--- Enable realtime for chat messages
-alter publication supabase_realtime add table public.chat_messages;
+-- Enable realtime for chat messages (idempotent)
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'chat_messages'
+  ) then
+    alter publication supabase_realtime add table public.chat_messages;
+  end if;
+end;
+$$;
