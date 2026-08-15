@@ -11,6 +11,7 @@ function app() {
       localStorage.setItem('kivu-theme', this.theme);
       document.documentElement.setAttribute('data-theme', this.theme);
       document.documentElement.style.setProperty('color-scheme', this.theme);
+      if (typeof refreshMapTheme === 'function') refreshMapTheme();
     }
   };
 }
@@ -657,7 +658,7 @@ function renderMyArtworks(artworks, pubCount) {
       </div>`;
     }
     item.innerHTML = `
-      <img class="artwork-item-thumb" src="${sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=150&q=85'}" alt="" loading="lazy">
+      <img class="artwork-item-thumb" src="${sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=150&q=85&fm=webp'}" alt="" loading="lazy">
       <div class="artwork-item-info">
         <div class="artwork-item-title">${escapeHtml(a.title)}</div>
         <div class="artwork-item-meta">${escapeHtml(a.category)} — ${price} ${sym}</div>
@@ -804,7 +805,7 @@ function buyArtwork(artworkId) {
     : 'Artisan';
   const price = (artwork.price_cents / 100).toFixed(2);
   const sym = currencySymbol(artwork.currency || 'USD');
-  const img = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85';
+  const img = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85&fm=webp';
   container.innerHTML = `
     <div class="purchase-preview">
       <img class="purchase-preview-img" src="${img}" alt="" loading="lazy">
@@ -1334,7 +1335,7 @@ async function loadArtisanProfile(profileId) {
     const artworks = artworksRes.data || [];
     const fullName = [profile.first_name, profile.last_name].filter(Boolean).join(' ') || 'Artisan KIVU';
     const roleLabel = roleLabels[profile.role] || 'Artisan';
-    const avatar = 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&q=85';
+    const avatar = 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&q=85&fm=webp';
 
     let artworksHtml = '';
     if (!artworks.length) {
@@ -1343,7 +1344,7 @@ async function loadArtisanProfile(profileId) {
       artworksHtml = artworks.map(a => {
         const price = (a.price_cents / 100).toFixed(2);
         const sym = currencySymbol(a.currency || 'USD');
-        const img = sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85';
+        const img = sanitizeUrl(a.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=85&fm=webp';
         return `<div class="artisan-profile-card" onclick="closeArtisanProfile();" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')event.preventDefault(),closeArtisanProfile();">
           <img src="${img}" alt="${escapeHtml(a.title)}" loading="lazy">
           <div class="artisan-profile-card-body">
@@ -1439,7 +1440,7 @@ function renderCatalog() {
       : 'Artisan KIVU';
     const price = (artwork.price_cents / 100).toFixed(2);
     const sym = currencySymbol(artwork.currency || 'USD');
-    const imgSrc = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=400&q=60';
+    const imgSrc = sanitizeUrl(artwork.image_path) || 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=400&q=60&fm=webp';
     const badgeText = 'Certifié';
     const badgeClass = 'mb-auth';
 
@@ -1658,3 +1659,78 @@ document.getElementById('nl-btn').addEventListener('click', async function(){
     setTimeout(() => { this.textContent = "S'abonner"; this.style.background = ''; this.disabled = false; }, 2000);
   }
 });
+
+// ── Carte Leaflet du Kivu ──
+const MAP_TILES = {
+  light: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+};
+const MAP_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+const KIVU_POINTS = [
+  { lat: -1.6792, lng: 29.2238, cat: 'a', title: 'Goma — Hub Musical & Arts Contemporains', desc: 'Rumba réinventée, afrobeat swahili et galeries d\'art urbain.' },
+  { lat: -1.5216, lng: 29.2467, cat: 'b', title: 'Volcan Nyiragongo', desc: 'Patrimoine naturel qui façonne l\'architecture de lave de Goma.' },
+  { lat: -2.4908, lng: 28.8428, cat: 'a', title: 'Bukavu — Littérature & Théâtre', desc: 'Théâtre-forum, prose congolaise et demeures art-déco sur collines.' },
+  { lat: -3.3984, lng: 29.1425, cat: 'a', title: 'Uvira — Taarab du Tanganyika', desc: 'Le Taarab mêle influences arabes, africaines et indiennes.' },
+  { lat: -2.1500, lng: 29.0500, cat: 'c', title: 'Île d\'Idjwi — Vannerie', desc: 'Paniers et nattes tressés en fibre de palmier doum.' },
+  { lat: -1.1823, lng: 29.4463, cat: 'c', title: 'Rutshuru — Tissage Nande', desc: 'Textiles et parures traditionnelles des artisans Nande.' },
+  { lat: 0.1314, lng: 29.2904, cat: 'c', title: 'Butembo — Forge & Sculpture', desc: 'Forgerons et sculpteurs sur bois, savoir transmis de père en fils.' },
+  { lat: 0.4911, lng: 29.4731, cat: 'd', title: 'Beni — Médias & Café', desc: 'Radios en ligne, presse indépendante et café de terroir.' },
+  { lat: -1.3972, lng: 29.0000, cat: 'd', title: 'Masisi — Agriculture de Montagne', desc: 'Billons anti-érosion et coopératives caféicoles des hauts plateaux.' }
+];
+const KIVU_CAT_LABELS = { a: 'Arts & Musique', b: 'Architecture & Patrimoine', c: 'Artisanat & Saveurs', d: 'Innovation & Technologie' };
+
+let kivuMap = null;
+let kivuTiles = null;
+
+function currentMapTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark'
+    || localStorage.getItem('kivu-theme') === 'dark' ? 'dark' : 'light';
+}
+
+function initMap() {
+  const el = document.getElementById('kivu-map');
+  if (!el || typeof L === 'undefined' || kivuMap) return;
+  const theme = currentMapTheme();
+  kivuMap = L.map(el, { zoomControl: true, scrollWheelZoom: false });
+  kivuMap.setView([-1.9, 29.0], 9);
+  kivuTiles = L.tileLayer(MAP_TILES[theme], { attribution: MAP_ATTRIBUTION, maxZoom: 19 }).addTo(kivuMap);
+  KIVU_POINTS.forEach(p => {
+    L.marker([p.lat, p.lng], {
+      icon: L.divIcon({
+        className: '',
+        html: '<div class="km-pin km-pin-' + p.cat + '"></div>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 26],
+        popupAnchor: [0, -26]
+      })
+    })
+      .addTo(kivuMap)
+      .bindPopup('<div class="km-title">' + p.title + '</div>'
+        + '<div class="km-cat km-cat-' + p.cat + '">' + KIVU_CAT_LABELS[p.cat] + '</div>'
+        + '<div class="km-desc">' + p.desc + '</div>');
+  });
+  kivuMap.invalidateSize();
+}
+
+function refreshMapTheme() {
+  if (!kivuMap || !kivuTiles) return;
+  kivuTiles.setUrl(MAP_TILES[currentMapTheme()]);
+}
+
+initMap();
+if (kivuMap) {
+  const mapWrap = document.getElementById('map-wrap');
+  if (mapWrap) {
+    const mapObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          kivuMap.invalidateSize();
+          mapObs.disconnect();
+        }
+      });
+    }, { threshold: 0.05 });
+    mapObs.observe(mapWrap);
+  }
+  window.addEventListener('resize', () => kivuMap.invalidateSize());
+}
