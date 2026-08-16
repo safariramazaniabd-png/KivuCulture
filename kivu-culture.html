@@ -45,12 +45,12 @@
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23141008'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23B8924A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.16.1/dist/cdn.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <link rel="stylesheet" href="css/kivu.css">
 <noscript><style>.rv{opacity:1!important;transform:none!important}.catalog-loading,.agenda-status{display:none!important}.catalog-empty{display:block!important}</style></noscript>
 </head>
@@ -58,6 +58,9 @@
 
 <!-- SKIP LINK -->
 <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+<!-- TOP ANCHOR -->
+<div id="top"></div>
 
 <!-- CURSEUR -->
 <div id="cur"></div>
@@ -82,6 +85,8 @@
     <li><a href="#" class="nav-cta" id="auth-nav-link" onclick="openModal(); closeNav(); return false;">Rejoindre</a></li>
   </ul>
 </nav>
+
+<main id="main-content">
 
 <!-- HERO -->
 <section class="hero">
@@ -115,19 +120,19 @@
   <div class="hero-right">
     <div class="hero-mosaic">
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1750110722835-40a46666f14c?w=600&q=85&fm=webp" alt="Musique Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1750110722835-40a46666f14c?w=600&q=85&fm=webp" alt="Musique Kivu" loading="eager" fetchpriority="high">
         <span class="mosaic-label">A — Arts</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=600&q=85&fm=webp" alt="Architecture Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?w=600&q=85&fm=webp" alt="Architecture Kivu" loading="eager" fetchpriority="high">
         <span class="mosaic-label">B — Architecture</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=600&q=85&fm=webp" alt="Artisanat Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=600&q=85&fm=webp" alt="Artisanat Kivu" loading="eager" fetchpriority="high">
         <span class="mosaic-label">C — Artisanat</span>
       </div>
       <div class="mosaic-cell">
-        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=85&fm=webp" alt="Innovation Kivu" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=85&fm=webp" alt="Innovation Kivu" loading="eager" fetchpriority="high">
         <span class="mosaic-label">D — Innovation</span>
       </div>
     </div>
@@ -303,7 +308,7 @@
     </div>
     <div class="cinema-list">
       <div class="cinema-item">
-        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=300&q=80&fm=webp" alt="" loading="lazy"></div>
+        <div class="cinema-item-thumb">        <img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=300&q=80&fm=webp" alt="Théâtre communautaire à Bukavu" loading="lazy"></div>
         <div>
           <p class="cinema-item-type">Théâtre Communautaire</p>
           <p class="cinema-item-title">Théâtre-Forum, Bukavu</p>
@@ -311,7 +316,7 @@
         </div>
       </div>
       <div class="cinema-item">
-        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&q=80&fm=webp" alt="" loading="lazy"></div>
+        <div class="cinema-item-thumb">        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&q=80&fm=webp" alt="Réalisateur au travail à Goma" loading="lazy"></div>
         <div>
           <p class="cinema-item-type">Court-Métrage</p>
           <p class="cinema-item-title">Nouvelle Vague de Goma</p>
@@ -319,7 +324,7 @@
         </div>
       </div>
       <div class="cinema-item">
-        <div class="cinema-item-thumb"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&q=80&fm=webp" alt="" loading="lazy"></div>
+        <div class="cinema-item-thumb">        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&q=80&fm=webp" alt="Projection de film au Kivu Film Fest" loading="lazy"></div>
         <div>
           <p class="cinema-item-type">Festival</p>
           <p class="cinema-item-title">Kivu Film Fest — Annuel</p>
@@ -356,7 +361,7 @@
     <div class="archi-hero-overlay">
       <span class="chip chip-ambre" style="margin-bottom:14px;">Paysage Urbain</span>
       <h3 style="font-family:var(--font-sans);font-size:2.2rem;font-weight:var(--fw-heading);color:var(--blanc);letter-spacing:var(--ls-heading);margin-bottom:8px;">Goma — La Ville sur la Lave</h3>
-      <p style="font-size:0.95rem;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.7;">Construite sur des coulées de lave volcanique du Nyiragongo, Goma développe une architecture adaptée unique au monde : fondations sur pierre poreuse noire, matériaux hybrides locaux et imported.</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.7;">Construite sur des coulées de lave volcanique du Nyiragongo, Goma développe une architecture adaptée unique au monde : fondations sur pierre poreuse noire, matériaux hybrides locaux et importés.</p>
     </div>
   </div>
 
@@ -656,7 +661,7 @@
   <div class="artisans-grid rv">
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=400&q=85&fm=webp" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1583394293253-4e7fa1f8e2c3?w=400&q=85&fm=webp" alt="Ambroise Mawazo, sculpteur" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain">Sculpture sur bois</p>
@@ -666,7 +671,7 @@
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&q=85&fm=webp" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&q=85&fm=webp" alt="Rahel Kahindo, peintre" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:var(--lave)">Peinture contemporaine</p>
@@ -676,7 +681,7 @@
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=85&fm=webp" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=85&fm=webp" alt="Joséphine Nyota, photographe" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:var(--lac)">Photographie documentaire</p>
@@ -686,7 +691,7 @@
     </div>
     <div class="artisan-card">
       <div class="artisan-photo-wrap">
-        <img class="artisan-photo" src="https://images.unsplash.com/photo-1560785496-3c9d27877182?w=400&q=85&fm=webp" alt="Artisan" loading="lazy">
+        <img class="artisan-photo" src="https://images.unsplash.com/photo-1560785496-3c9d27877182?w=400&q=85&fm=webp" alt="Evariste Ndagano, tisserand" loading="lazy">
       </div>
       <div class="artisan-info">
         <p class="artisan-domain" style="color:#9C6C00">Tissage & Textiles</p>
@@ -835,17 +840,19 @@
       <button class="nl-btn" id="nl-btn" type="submit">S'abonner</button>
     </form>
     <p class="nl-note">Désabonnement en un clic. Aucune donnée revendue.</p>
-    <div style="margin-top:32px;">
-      <p style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:12px;text-transform:none;letter-spacing:0;font-family:var(--font-sans);">Paiement sécurisé</p>
+    <div class="payment-badges">
+      <p class="payment-badge-label">Paiement sécurisé</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">M-PESA</span>
-        <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">VISA</span>
-        <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">PAYPAL</span>
-        <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:600;">AIRTEL MONEY</span>
+        <span class="payment-badge">M-PESA</span>
+        <span class="payment-badge">VISA</span>
+        <span class="payment-badge">PAYPAL</span>
+        <span class="payment-badge">AIRTEL MONEY</span>
       </div>
     </div>
   </div>
 </div>
+
+</main>
 
 <!-- FOOTER -->
 <div class="footer-bar"></div>
@@ -887,11 +894,14 @@
     </div>
     <div>
       <p class="footer-col-title">Contact</p>
-      <form id="contact-form" style="display:flex;flex-direction:column;gap:8px;">
-        <input type="text" name="name" placeholder="Votre nom" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);">
-        <input type="email" name="email" placeholder="Votre email" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);">
-        <textarea name="message" placeholder="Votre message" required rows="3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:var(--blanc);font-size:0.82rem;font-family:var(--font-sans);resize:vertical;"></textarea>
-        <button type="submit" style="background:var(--lave);color:var(--noir);border:none;border-radius:6px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Envoyer</button>
+      <form id="contact-form" class="contact-form" aria-label="Formulaire de contact">
+        <label for="contact-name" class="visually-hidden">Votre nom</label>
+        <input type="text" id="contact-name" name="name" placeholder="Votre nom" required>
+        <label for="contact-email" class="visually-hidden">Votre email</label>
+        <input type="email" id="contact-email" name="email" placeholder="Votre email" required>
+        <label for="contact-message" class="visually-hidden">Votre message</label>
+        <textarea id="contact-message" name="message" placeholder="Votre message" required rows="3"></textarea>
+        <button type="submit" class="contact-submit">Envoyer</button>
       </form>
     </div>
   </div>
@@ -1076,9 +1086,11 @@
   </div>
 </div>
 
+<a href="#top" class="back-to-top" aria-label="Retour en haut" id="back-to-top" hidden>↑</a>
+
 <script src="supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
-<script src="js/kivu.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+<script defer src="js/kivu.js"></script>
 </body>
 </html>

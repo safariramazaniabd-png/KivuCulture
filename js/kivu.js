@@ -1,3 +1,6 @@
+// ── Error helper (silent in production) ──
+const logError = (ctx, err) => { if (location.hostname === 'localhost') console.error(ctx, err); };
+
 // ── Alpine.js App ──
 function app() {
   return {
@@ -171,7 +174,7 @@ if (authIsConfigured && window.supabase && typeof window.supabase.createClient =
       }
     });
   } catch (error) {
-    console.error('Supabase initialization failed:', error);
+    logError('Supabase initialization failed:', error);
   }
 }
 
@@ -540,7 +543,7 @@ async function loadProfile() {
     const roleLabel = document.getElementById('auth-user-role');
     roleLabel.textContent = 'Profil : ' + (roleLabels[data.role] || roleLabels.collector);
   } catch (err) {
-    console.error('Profile load error:', err);
+    logError('Profile load error:', err);
   }
 }
 
@@ -582,7 +585,7 @@ async function getPublicationCount() {
       .eq('status', 'published');
     if (error) throw error;
     return count || 0;
-  } catch (err) { console.error('getPublicationCount error:', err); return 0; }
+  } catch (err) { logError('getPublicationCount error:', err); return 0; }
 }
 
 const artworksById = {};
@@ -601,7 +604,7 @@ async function loadMyArtworks() {
     renderMyArtworks(data || [], pubCount);
   } catch (err) {
     artworkListStatus.textContent = 'Erreur de chargement.';
-    console.error(err);
+    logError(err);
   }
 }
 
@@ -865,7 +868,7 @@ async function createOrder(artwork) {
 
     window.location.href = data.url;
   } catch (err) {
-    console.error('Stripe session error:', err);
+    logError('Stripe session error:', err);
     btn.textContent = 'Erreur — ' + (err.message || 'réessayez');
     btn.style.background = '#FCE4EC';
     setTimeout(() => { btn.disabled = false; btn.textContent = 'Confirmer et payer'; btn.style.background = ''; }, 3000);
@@ -891,7 +894,7 @@ async function loadMyOrders() {
     if (error) throw error;
     renderOrders(data || []);
   } catch (err) {
-    console.error('Orders load error:', err);
+    logError('Orders load error:', err);
     ordersContainer.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -937,7 +940,7 @@ async function loadMyCertificates() {
     if (error) throw error;
     renderCertificates(data || []);
   } catch (err) {
-    console.error('Certificates load error:', err);
+    logError('Certificates load error:', err);
     certsContainer.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -978,7 +981,7 @@ async function loadAdminDashboard() {
     renderAdminMenu(container);
     renderAdminView(container);
   } catch (err) {
-    console.error('Admin load error:', err);
+    logError('Admin load error:', err);
     container.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1011,7 +1014,7 @@ async function renderAdminView(container) {
     else if (adminSubTab === 'messages') await renderAdminMessages(content);
     else if (adminSubTab === 'reviews') await renderAdminReviews(content);
   } catch (err) {
-    console.error('Admin view error:', err);
+    logError('Admin view error:', err);
     content.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1056,7 +1059,7 @@ async function renderAdminUsers(el) {
     html += '</tbody></table></div>';
     el.innerHTML = html;
   } catch (err) {
-    console.error('Admin users error:', err);
+    logError('Admin users error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1084,7 +1087,7 @@ async function renderAdminEvents(el) {
           const { error: delErr } = await authClient.from('events').delete().eq('id', btn.dataset.id);
           if (delErr) throw delErr;
           renderAdminView(document.getElementById('admin-content'));
-        } catch (err) { console.error('Event delete error:', err); }
+        } catch (err) { logError('Event delete error:', err); }
       });
     });
     el.querySelectorAll('.admin-event-edit').forEach(btn => {
@@ -1096,7 +1099,7 @@ async function renderAdminEvents(el) {
     const addBtn = document.getElementById('admin-event-add');
     if (addBtn) addBtn.addEventListener('click', showAdminEventForm);
   } catch (err) {
-    console.error('Admin events error:', err);
+    logError('Admin events error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1146,7 +1149,7 @@ async function showAdminEventForm(eventToEdit) {
       if (error) throw error;
       adminSubTab = 'events';
       renderAdminView(document.getElementById('admin-content'));
-    } catch (err) { console.error('Event save error:', err); }
+    } catch (err) { logError('Event save error:', err); }
   });
   document.getElementById('admin-event-cancel').addEventListener('click', () => {
     adminSubTab = 'events';
@@ -1179,7 +1182,7 @@ async function renderAdminVerifications(el) {
         try {
           await authClient.from('profiles').update({ verification_status: 'verified' }).eq('id', btn.dataset.id);
           renderAdminVerifications(el);
-        } catch (err) { console.error('Verification approve error:', err); }
+        } catch (err) { logError('Verification approve error:', err); }
       });
     });
     el.querySelectorAll('.admin-verif-reject').forEach(btn => {
@@ -1187,11 +1190,11 @@ async function renderAdminVerifications(el) {
         try {
           await authClient.from('profiles').update({ verification_status: 'rejected' }).eq('id', btn.dataset.id);
           renderAdminVerifications(el);
-        } catch (err) { console.error('Verification reject error:', err); }
+        } catch (err) { logError('Verification reject error:', err); }
       });
     });
   } catch (err) {
-    console.error('Admin verifications error:', err);
+    logError('Admin verifications error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1216,11 +1219,11 @@ async function renderAdminMessages(el) {
         try {
           await authClient.from('messages').delete().eq('id', btn.dataset.id);
           renderAdminMessages(el);
-        } catch (err) { console.error('Message delete error:', err); }
+        } catch (err) { logError('Message delete error:', err); }
       });
     });
   } catch (err) {
-    console.error('Admin messages error:', err);
+    logError('Admin messages error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1246,11 +1249,11 @@ async function renderAdminReviews(el) {
         try {
           await authClient.from('reviews').delete().eq('id', btn.dataset.id);
           renderAdminReviews(el);
-        } catch (err) { console.error('Review delete error:', err); }
+        } catch (err) { logError('Review delete error:', err); }
       });
     });
   } catch (err) {
-    console.error('Admin reviews error:', err);
+    logError('Admin reviews error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';
   }
 }
@@ -1301,7 +1304,7 @@ async function loadAgenda() {
         </div>`;
     });
   } catch (err) {
-    console.error('Agenda load error:', err);
+    logError('Agenda load error:', err);
     if (document.getElementById('agenda-status')) {
       document.getElementById('agenda-status').textContent = 'Impossible de charger l\'agenda.';
     }
@@ -1375,7 +1378,7 @@ async function loadArtisanProfile(profileId) {
       <div class="artisan-profile-grid">${artworksHtml}</div>
     `;
   } catch (err) {
-    console.error('Artisan profile error:', err);
+    logError('Artisan profile error:', err);
     container.innerHTML = '<div class="catalog-empty">Impossible de charger le profil de cet artisan.</div>';
   }
 }
@@ -1408,7 +1411,7 @@ async function loadCatalog() {
     catalogArtworks = data || [];
     renderCatalog();
   } catch (err) {
-    console.error('Catalog load error:', err);
+    logError('Catalog load error:', err);
     catalogStatus.className = 'catalog-empty';
     catalogStatus.textContent = 'Impossible de charger le catalogue pour le moment.';
   }
@@ -1661,7 +1664,7 @@ document.getElementById('nl-btn').addEventListener('click', async function(){
     input.value = '';
     setTimeout(() => { this.textContent = "S'abonner"; this.style.background = ''; this.disabled = false; }, 2500);
   } catch (err) {
-    console.error('Newsletter error:', err);
+    logError('Newsletter error:', err);
     this.textContent = 'Erreur';
     this.style.background = '#FCE4EC';
     setTimeout(() => { this.textContent = "S'abonner"; this.style.background = ''; this.disabled = false; }, 2000);
@@ -1726,6 +1729,19 @@ function refreshMapTheme() {
   kivuTiles.setUrl(MAP_TILES[currentMapTheme()]);
 }
 
+// Lazy-load Leaflet CSS when map section approaches viewport
+function loadLeafletCss() {
+  if (document.querySelector('link[href*="leaflet.min.css"]')) return Promise.resolve();
+  return new Promise(resolve => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css';
+    link.onload = resolve;
+    link.onerror = resolve;
+    document.head.appendChild(link);
+  });
+}
+
 initMap();
 if (kivuMap) {
   const mapWrap = document.getElementById('map-wrap');
@@ -1733,7 +1749,7 @@ if (kivuMap) {
     const mapObs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          kivuMap.invalidateSize();
+          loadLeafletCss().then(() => kivuMap.invalidateSize());
           mapObs.disconnect();
         }
       });
@@ -1741,4 +1757,12 @@ if (kivuMap) {
     mapObs.observe(mapWrap);
   }
   window.addEventListener('resize', () => kivuMap.invalidateSize());
+}
+
+// ── Back-to-top visibility ──
+const btt = document.getElementById('back-to-top');
+if (btt) {
+  window.addEventListener('scroll', () => {
+    btt.hidden = window.scrollY < 400;
+  }, { passive: true });
 }

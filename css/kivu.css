@@ -2358,6 +2358,43 @@ footer {
 .footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .2s; }
 .footer-legal a:hover { color: rgba(255,255,255,0.75); }
 .footer-legal a.disabled { opacity: 0.35; pointer-events: none; cursor: default; }
+/* Contact form */
+.contact-form { display: flex; flex-direction: column; gap: 8px; }
+.contact-form input, .contact-form textarea {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; padding: 8px 12px; color: var(--blanc);
+  font-size: 0.82rem; font-family: var(--font-sans);
+}
+.contact-form textarea { resize: vertical; }
+.contact-submit {
+  background: var(--lave); color: var(--noir); border: none; border-radius: 6px;
+  padding: 8px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  font-family: var(--font-sans);
+}
+/* Repeated subheading */
+.sub-heading {
+  font-family: var(--font-sans); font-size: 1.3rem; font-weight: var(--fw-heading);
+  letter-spacing: var(--ls-heading); margin-bottom: 8px;
+}
+/* Payment badges */
+.payment-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px; }
+.payment-badge-label { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 12px; text-transform: none; letter-spacing: 0; font-family: var(--font-sans); }
+.payment-badge {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 14px; border-radius: 6px; font-size: 0.78rem;
+  color: rgba(255,255,255,0.5); font-weight: 600;
+}
+/* Back to top */
+.back-to-top {
+  position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--lave); color: var(--noir); font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: opacity .3s, transform .3s;
+}
+.back-to-top[hidden] { display: none; }
+.back-to-top:hover { transform: scale(1.1); }
 .footer-bar {
   height: 3px;
   background: linear-gradient(90deg, var(--terre), var(--lave), var(--lave-light), var(--ambre));
