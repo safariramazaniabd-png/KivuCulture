@@ -18,16 +18,30 @@
 <meta name="twitter:title" content="KIVU — Culture & Productions du Congo Oriental">
 <meta name="twitter:description" content="Artisanat, musique, gastronomie, littérature et traditions des peuples du Kivu.">
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1594999945795-e570338fdd12?w=1200&q=80&fm=webp">
+<link rel="canonical" href="https://kivu-culture.netlify.app/">
 <!-- JSON-LD -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://kivu-culture.netlify.app/#website",
   "name": "KIVU Culture",
   "url": "https://kivu-culture.netlify.app",
   "description": "Plateforme culturelle dédiée au Kivu (RDC).",
   "inLanguage": "fr-FR",
-  "publisher": { "@type": "Organization", "name": "KIVU Culture" }
+  "publisher": {
+    "@type": "Organization",
+    "name": "KIVU Culture",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://kivu-culture.netlify.app/favicon.svg"
+    },
+    "sameAs": [
+      "https://x.com/kivuculture",
+      "https://facebook.com/kivuculture",
+      "https://instagram.com/kivuculture"
+    ]
+  }
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +70,7 @@
     <span class="nav-toggle-line"></span>
     <span class="nav-toggle-line"></span>
   </button>
-  <a href="#" class="nav-logo"><span class="dot"></span>KIVU</a>
+  <a href="#top" class="nav-logo"><span class="dot"></span>KIVU</a>
   <ul class="nav-menu" id="nav-menu">
     <li><button class="nav-menu-close" aria-label="Fermer le menu" onclick="closeNav()">&#10005;</button></li>
     <li><a href="#arts" onclick="closeNav()">Arts</a></li>
@@ -841,11 +855,11 @@
       <div class="footer-logo"><span class="dot-r"></span>KIVU</div>
       <p class="footer-desc">La plateforme de référence des productions matérielles et artistiques du Congo Oriental. Documenter, valoriser et connecter les créateurs du Kivu au monde entier.</p>
       <div class="footer-socials">
-        <a href="#" class="soc">𝕏</a>
-        <a href="#" class="soc">f</a>
-        <a href="#" class="soc">ig</a>
-        <a href="#" class="soc">in</a>
-        <a href="#" class="soc">yt</a>
+        <a href="#" class="soc disabled" aria-label="X (Twitter) — Bientôt disponible" rel="noopener noreferrer" tabindex="-1">𝕏</a>
+        <a href="#" class="soc disabled" aria-label="Facebook — Bientôt disponible" rel="noopener noreferrer" tabindex="-1">f</a>
+        <a href="#" class="soc disabled" aria-label="Instagram — Bientôt disponible" rel="noopener noreferrer" tabindex="-1">ig</a>
+        <a href="#" class="soc disabled" aria-label="LinkedIn — Bientôt disponible" rel="noopener noreferrer" tabindex="-1">in</a>
+        <a href="#" class="soc disabled" aria-label="YouTube — Bientôt disponible" rel="noopener noreferrer" tabindex="-1">yt</a>
       </div>
     </div>
     <div>
@@ -884,9 +898,9 @@
   <div class="footer-bottom">
     <p class="footer-copy">© 2026 KIVU — Goma & Bukavu, République Démocratique du Congo. Tous droits réservés.</p>
     <div class="footer-legal">
-      <a href="#">CGU</a>
-      <a href="#">Confidentialité</a>
-      <a href="#">Paiements</a>
+      <a href="#" class="disabled" aria-label="CGU — Bientôt disponible" tabindex="-1">CGU</a>
+      <a href="#" class="disabled" aria-label="Confidentialité — Bientôt disponible" tabindex="-1">Confidentialité</a>
+      <a href="#" class="disabled" aria-label="Paiements — Bientôt disponible" tabindex="-1">Paiements</a>
     </div>
   </div>
 </footer>

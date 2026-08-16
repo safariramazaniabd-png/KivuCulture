@@ -848,14 +848,12 @@ async function createOrder(artwork) {
       },
       body: JSON.stringify({
         artwork_id: artwork.id,
-        user_id: currentUser.id,
-        user_email: currentUser.email,
       }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur');
 
-    await authClient.from('orders').insert({
+    const { error: orderErr } = await authClient.from('orders').insert({
       buyer_id: currentUser.id,
       artwork_id: artwork.id,
       amount_cents: artwork.price_cents,
@@ -863,6 +861,7 @@ async function createOrder(artwork) {
       status: 'pending',
       payment_reference: data.session_id,
     });
+    if (orderErr) throw new Error('Impossible de créer la commande');
 
     window.location.href = data.url;
   } catch (err) {
@@ -1203,14 +1202,23 @@ async function renderAdminMessages(el) {
     const { data, error } = await authClient.from('messages').select('*').order('created_at', { ascending: false });
     if (error) throw error;
     if (!data || !data.length) { el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Aucun message de contact.</p>'; return; }
-    let html = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Nom</th><th>Email</th><th>Message</th></tr></thead><tbody>';
+    let html = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Nom</th><th>Email</th><th>Message</th><th></th></tr></thead><tbody>';
     data.forEach(m => {
       const d = new Date(m.created_at);
       const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-      html += `<tr><td style="white-space:nowrap;">${dateStr}</td><td>${escapeHtml(m.name)}</td><td><a href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a></td><td style="max-width:400px;word-break:break-word;">${escapeHtml(m.message)}</td></tr>`;
+      html += `<tr><td style="white-space:nowrap;">${dateStr}</td><td>${escapeHtml(m.name)}</td><td><a href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a></td><td style="max-width:400px;word-break:break-word;">${escapeHtml(m.message)}</td>
+        <td><button class="admin-sub-tab msg-delete-btn" data-id="${m.id}" style="background:var(--lave);color:var(--blanc);">Suppr.</button></td></tr>`;
     });
     html += '</tbody></table></div>';
     el.innerHTML = html;
+    el.querySelectorAll('.msg-delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await authClient.from('messages').delete().eq('id', btn.dataset.id);
+          renderAdminMessages(el);
+        } catch (err) { console.error('Message delete error:', err); }
+      });
+    });
   } catch (err) {
     console.error('Admin messages error:', err);
     el.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Erreur de chargement.</p>';

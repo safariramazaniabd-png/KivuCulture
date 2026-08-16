@@ -79,10 +79,16 @@ $$;
 grant execute on function public.is_admin() to anon, authenticated;
 
 alter table public.profiles enable row level security;
+-- Owners + admins can see full profile
 drop policy if exists profiles_select_own_or_admin on public.profiles;
 create policy profiles_select_own_or_admin
 on public.profiles for select
 using (id = auth.uid() or public.is_admin());
+-- Anonymous visitors can see verified artisans' public info
+drop policy if exists profiles_select_public_verified on public.profiles;
+create policy profiles_select_public_verified
+on public.profiles for select
+using (verification_status = 'verified');
 
 drop policy if exists profiles_admin_update on public.profiles;
 create policy profiles_admin_update
@@ -291,6 +297,12 @@ create policy newsletter_select_admin
 on public.newsletter_subscribers for select
 using (public.is_admin());
 
+-- Only admins can remove subscribers
+drop policy if exists newsletter_delete_admin on public.newsletter_subscribers;
+create policy newsletter_delete_admin
+on public.newsletter_subscribers for delete
+using (public.is_admin());
+
 -- Contact messages
 create table if not exists public.messages (
   id uuid primary key default gen_random_uuid(),
@@ -309,6 +321,11 @@ with check (true);
 drop policy if exists messages_select_admin on public.messages;
 create policy messages_select_admin
 on public.messages for select
+using (public.is_admin());
+
+drop policy if exists messages_delete_admin on public.messages;
+create policy messages_delete_admin
+on public.messages for delete
 using (public.is_admin());
 
 -- Reviews / ratings
@@ -366,6 +383,13 @@ using (buyer_id = auth.uid() or artisan_id = auth.uid());
 drop policy if exists conversations_insert_participant on public.conversations;
 create policy conversations_insert_participant
 on public.conversations for insert
+with check (buyer_id = auth.uid() or artisan_id = auth.uid());
+
+-- Participants can update last_message / updated_at
+drop policy if exists conversations_update_participant on public.conversations;
+create policy conversations_update_participant
+on public.conversations for update
+using (buyer_id = auth.uid() or artisan_id = auth.uid())
 with check (buyer_id = auth.uid() or artisan_id = auth.uid());
 
 -- Messagerie: messages

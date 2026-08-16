@@ -24,6 +24,7 @@ DELETE FROM public.orders        WHERE buyer_id IN (SELECT id FROM auth.users WH
 DELETE FROM auth.identities      WHERE user_id IN (SELECT id FROM auth.users WHERE email LIKE '%@kivu-culture.cd');
 DELETE FROM public.artworks      WHERE artisan_id IN (SELECT id FROM auth.users WHERE email LIKE '%@kivu-culture.cd');
 DELETE FROM public.events        WHERE status = 'published';
+DELETE FROM public.profiles      WHERE id IN (SELECT id FROM auth.users WHERE email LIKE '%@kivu-culture.cd');
 DELETE FROM auth.users           WHERE email LIKE '%@kivu-culture.cd';
 
 -- ============================================================
@@ -129,14 +130,76 @@ VALUES
   ('Résidence : Eau & Mémoire',       'Résidence de 2 semaines pour 6 artistes autour des lacs Kivu et Tanganyika. Appel à candidatures jusqu''au 15/09.',                                           'Résidence',  'Bukavu — Maison des Artistes',                          '2026-10-01 09:00:00+02', '2026-10-15 18:00:00+02', 'published');
 
 -- ============================================================
--- 6. VÉRIFICATION
+-- 6. COMPTE ADMIN (séparé pour éviter conflit trigger)
+-- ============================================================
+-- Mot de passe : Kivu2026!
+
+DO $$
+DECLARE
+  admin_id uuid;
+BEGIN
+  INSERT INTO auth.users (
+    instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+    raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+    confirmation_token, recovery_token, email_change, email_change_token_new, email_change_token_current
+  ) VALUES (
+    '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated',
+    'admin@kivu-culture.cd', crypt('Kivu2026!', gen_salt('bf')), now(),
+    '{"provider":"email","providers":["email"]}', '{}', now(), now(),
+    '', '', '', '', ''
+  ) RETURNING id INTO admin_id;
+
+  INSERT INTO auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
+  VALUES (admin_id, admin_id, jsonb_build_object('sub', admin_id::text, 'email', 'admin@kivu-culture.cd'), 'email', admin_id::text, now(), now(), now());
+
+  -- Trigger creates profile with role='collector'; promote to admin
+  UPDATE public.profiles SET role = 'admin', first_name = 'Admin', last_name = 'KIVU', city = 'Goma', verification_status = 'verified'
+  WHERE id = admin_id;
+END;
+$$;
+
+-- ============================================================
+-- 7. AVIS (reviews) — admin et collectors fictifs
+-- ============================================================
+INSERT INTO public.reviews (artwork_id, user_id, rating, comment)
+SELECT artwork_id, user_id, rating, comment
+FROM (VALUES
+  -- Admin reviews 4 artworks
+  ((SELECT id FROM public.artworks WHERE title = 'Masque Mukanda' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'admin@kivu-culture.cd'), 5,
+   'Pièce exceptionnelle, le/details du sculpteur sont visibles dans chaque grain de bois.'),
+  ((SELECT id FROM public.artworks WHERE title = 'Kivu Vert' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'admin@kivu-culture.cd'), 4,
+   'Belle composition, les couleurs du Kivu sont parfaitement rendues.'),
+  ((SELECT id FROM public.artworks WHERE title = 'Nyiragongo #3' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'admin@kivu-culture.cd'), 5,
+   'Document exceptionnel. La puissance du volcan est capturée avec une rare sensibilité.'),
+  ((SELECT id FROM public.artworks WHERE title = 'Vannerie Bashi' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'admin@kivu-culture.cd'), 4,
+   'Travail traditionnel impeccable. La finition est soignée et les motifs sont authentiques.'),
+  -- Grace (pending) reviews 2 artworks
+  ((SELECT id FROM public.artworks WHERE title = 'Femme Lave' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'grace@kivu-culture.cd'), 5,
+   'This painting speaks to my soul. The woman''s gaze is unforgettable.'),
+  ((SELECT id FROM public.artworks WHERE title = 'Tenture Kivu' LIMIT 1),
+   (SELECT id FROM auth.users WHERE email = 'grace@kivu-culture.cd'), 4,
+   'Magnifique tissage, les motifs Shi sont fidèlement reproduits.')
+) AS t(artwork_id, user_id, rating, comment)
+WHERE t.artwork_id IS NOT NULL AND t.user_id IS NOT NULL;
+
+-- ============================================================
+-- 8. VÉRIFICATION
 -- ============================================================
 SELECT '✅ Artisans' as section, count(*)||' comptes créés' FROM auth.users WHERE email LIKE '%@kivu-culture.cd'
 UNION ALL
-SELECT '✅ Profils', count(*)||' profils artisan' FROM public.profiles WHERE role = 'artisan'
+SELECT '✅ Profils', count(*)||' profils' FROM public.profiles WHERE id IN (SELECT id FROM auth.users WHERE email LIKE '%@kivu-culture.cd')
+UNION ALL
+SELECT '✅ Admin', count(*)||' compte admin' FROM public.profiles WHERE role = 'admin'
 UNION ALL
 SELECT '✅ Œuvres', count(*)||' œuvres publiées' FROM public.artworks WHERE status = 'published'
 UNION ALL
 SELECT '✅ Événements', count(*)||' événements à venir' FROM public.events WHERE status = 'published'
 UNION ALL
-SELECT '🔑 Identifiants', 'Email: *@kivu-culture.cd | Mot de passe: Kivu2026!' as infos;
+SELECT '✅ Avis', count(*)||' reviews' FROM public.reviews
+UNION ALL
+SELECT '🔑 Identifiants', 'Artisans: *@kivu-culture.cd | Admin: admin@kivu-culture.cd | Mot de passe: Kivu2026!' as infos;

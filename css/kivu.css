@@ -2333,6 +2333,7 @@ footer {
   transition: background .2s, color .2s;
 }
 .soc:hover { background: var(--lave); color: var(--noir); }
+.soc.disabled { opacity: 0.35; pointer-events: none; cursor: default; }
 .footer-col-title {
   font-family: var(--font-sans);
   font-size: 0.78rem;
@@ -2356,6 +2357,7 @@ footer {
 .footer-legal { display: flex; gap: 20px; }
 .footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .2s; }
 .footer-legal a:hover { color: rgba(255,255,255,0.75); }
+.footer-legal a.disabled { opacity: 0.35; pointer-events: none; cursor: default; }
 .footer-bar {
   height: 3px;
   background: linear-gradient(90deg, var(--terre), var(--lave), var(--lave-light), var(--ambre));

@@ -1,6 +1,7 @@
 export const handler = async (event) => {
+  const ALLOWED_ORIGIN = process.env.SITE_URL || 'https://kivu-culture.netlify.app';
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
@@ -14,15 +15,23 @@ export const handler = async (event) => {
   }
 
   try {
-    const { artwork_id, user_id, user_email } = JSON.parse(event.body || '{}');
+    const { artwork_id } = JSON.parse(event.body || '{}');
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeKey) throw new Error('Stripe non configuré');
 
-    if (!artwork_id || !user_id) throw new Error('Paramètres manquants');
+    if (!artwork_id) throw new Error('Paramètres manquants');
 
-    const supabaseUrl = 'https://uvgyjhgdcczjfijsbpgq.supabase.co';
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://uvgyjhgdcczjfijsbpgq.supabase.co';
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
     const authHeader = event.headers.authorization || event.headers.Authorization || '';
+
+    // Verify user identity from JWT (never trust client-supplied user_id)
+    const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { apikey: supabaseKey, Authorization: authHeader },
+    });
+    if (!userRes.ok) throw new Error('Session invalide');
+    const user = await userRes.json();
+    if (!user?.id) throw new Error('Utilisateur non trouvé');
 
     const artworkRes = await fetch(`${supabaseUrl}/rest/v1/artworks?select=*&id=eq.${artwork_id}`, {
       headers: { apikey: supabaseKey, Authorization: authHeader },
@@ -31,15 +40,15 @@ export const handler = async (event) => {
     const artwork = artworks?.[0];
     if (!artwork) throw new Error('Œuvre introuvable');
 
-    const origin = event.headers.origin || event.headers.referer?.replace(/\/+$/, '') || 'https://kivu-culture.netlify.app';
+    const origin = event.headers.origin || event.headers.referer?.replace(/\/+$/, '') || ALLOWED_ORIGIN;
 
     const params = new URLSearchParams();
     params.append('mode', 'payment');
     params.append('success_url', `${origin}/kivu-culture.html?checkout=success`);
     params.append('cancel_url', `${origin}/kivu-culture.html?checkout=cancel`);
-    if (user_email) params.append('customer_email', user_email);
+    if (user.email) params.append('customer_email', user.email);
     params.append('metadata[artwork_id]', artwork.id);
-    params.append('metadata[buyer_id]', user_id);
+    params.append('metadata[buyer_id]', user.id);
     params.append('line_items[0][price_data][currency]', (artwork.currency || 'USD').toLowerCase());
     params.append('line_items[0][price_data][product_data][name]', artwork.title);
     if (artwork.description) params.append('line_items[0][price_data][product_data][description]', artwork.description);

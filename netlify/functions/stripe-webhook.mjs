@@ -53,7 +53,7 @@ export const handler = async (event) => {
 
     if (eventPayload.type === 'checkout.session.completed') {
       const session = eventPayload.data.object;
-      const supabaseUrl = 'https://uvgyjhgdcczjfijsbpgq.supabase.co';
+      const supabaseUrl = process.env.SUPABASE_URL || 'https://uvgyjhgdcczjfijsbpgq.supabase.co';
       const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
       if (!serviceKey) throw new Error('Service role key not configured');
@@ -74,6 +74,8 @@ export const handler = async (event) => {
           },
           body: JSON.stringify({ status: 'paid' }),
         });
+      } else {
+        console.warn('Webhook: no matching order for session', session.id);
       }
     }
 
