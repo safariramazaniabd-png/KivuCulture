@@ -2,4 +2,4 @@
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self' https:; style-src 'unsafe-inline' 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; script-src 'unsafe-inline' 'self' https://cdn.jsdelivr.net https://uvgyjhgdcczjfijsbpgq.supabase.co; connect-src 'self' https://uvgyjhgdcczjfijsbpgq.supabase.co https://api.stripe.com;
+  Content-Security-Policy: default-src 'self' https:; style-src 'unsafe-inline' 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; script-src 'unsafe-inline' 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://uvgyjhgdcczjfijsbpgq.supabase.co; connect-src 'self' https://uvgyjhgdcczjfijsbpgq.supabase.co https://api.stripe.com;

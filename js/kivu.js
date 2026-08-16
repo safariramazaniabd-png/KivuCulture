@@ -604,7 +604,7 @@ async function loadMyArtworks() {
     renderMyArtworks(data || [], pubCount);
   } catch (err) {
     artworkListStatus.textContent = 'Erreur de chargement.';
-    logError(err);
+    logError('loadMyArtworks error:', err);
   }
 }
 
@@ -1531,7 +1531,8 @@ function startConversation(artisanId, artworkId) {
 
 async function loadConversations() {
   const list = document.getElementById('conversation-list');
-  if (!list || !authClient || !currentUser) { list.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Connectez-vous pour voir vos messages.</p>'; return; }
+  if (!list) return;
+  if (!authClient || !currentUser) { list.innerHTML = '<p style="font-size:0.85rem;color:var(--gris-text);">Connectez-vous pour voir vos messages.</p>'; return; }
   try {
     const { data } = await authClient.from('conversations').select('*').order('updated_at', { ascending: false });
     if (data && data.length) {
@@ -1636,7 +1637,8 @@ document.addEventListener('submit', function(e) {
 });
 
 // ── Newsletter ──
-document.getElementById('nl-btn').addEventListener('click', async function(){
+document.getElementById('nl-btn').addEventListener('click', async function(e){
+  e.preventDefault();
   const input = document.getElementById('nl-email');
   const email = input.value.trim();
   if (!email || !email.includes('@')) {
