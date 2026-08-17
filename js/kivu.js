@@ -4,7 +4,7 @@ const logError = (ctx, err) => { if (location.hostname === 'localhost') console.
 // ── Alpine.js App ──
 function app() {
   return {
-    theme: localStorage.getItem('kivu-theme') || 'light',
+    theme: localStorage.getItem('kivu-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
     init() {
       document.documentElement.setAttribute('data-theme', this.theme);
       document.documentElement.style.setProperty('color-scheme', this.theme);
@@ -1672,6 +1672,16 @@ document.getElementById('nl-btn').addEventListener('click', async function(e){
     setTimeout(() => { this.textContent = "S'abonner"; this.style.background = ''; this.disabled = false; }, 2000);
   }
 });
+
+// ── Newsletter count (dynamic) ──
+(async () => {
+  const el = document.getElementById('nl-count');
+  if (!el || !authClient) return;
+  try {
+    const { count } = await authClient.from('newsletter_subscribers').select('*', { count: 'exact', head: true });
+    if (count != null) el.textContent = count.toLocaleString('fr-FR');
+  } catch (_) { /* silent */ }
+})();
 
 // ── Carte Leaflet du Kivu ──
 const MAP_TILES = {
